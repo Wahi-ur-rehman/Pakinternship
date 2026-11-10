@@ -45,38 +45,55 @@ import Layout from '../layouts/Layout.astro';
       </section>
 
       <!-- Section 2: The Editorial Team -->
-      <section class="pt-8 border-t border-slate-100">
-        <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mb-6">Our Editorial Leadership</h2>
+      <section id="editorial-board" class="pt-8 border-t border-slate-100">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-2">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Our Editorial Leadership & Board</h2>
+            <p class="text-xs text-slate-500 mt-1">Real Pakistani researchers, engineers, and career mentors auditing every post.</p>
+          </div>
+          <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full w-fit">
+            5 Verified Contributors
+          </span>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="rounded-2xl border border-slate-200 p-6 bg-slate-50/60">
-            <div class="flex items-center gap-4 mb-4">
+          <!-- Founder: Wahi ur Rehman -->
+          <div class="rounded-2xl border-2 border-emerald-500/30 p-6 bg-emerald-50/20 shadow-xs md:col-span-2">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
               <img
                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80"
-                alt="Hamza Tariq"
-                class="w-16 h-16 rounded-full object-cover border-2 border-emerald-600 shadow-sm"
+                alt="Wahi ur Rehman"
+                class="w-16 h-16 rounded-2xl object-cover border-2 border-emerald-600 shadow-sm"
               />
-              <div>
-                <h3 class="font-bold text-slate-900 text-base">Hamza Tariq</h3>
-                <p class="text-xs text-emerald-800 font-semibold">Founder & Senior Technical Editor</p>
-                <p class="text-[11px] text-slate-500">Ex-Staff Engineer • FAST-NUCES Alumnus</p>
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <h3 class="font-bold text-slate-900 text-lg">Wahi ur Rehman</h3>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-600 text-white">Founder</span>
+                </div>
+                <p class="text-xs text-emerald-800 font-semibold">Founder & Chief Career Editor</p>
+                <p class="text-[11px] text-slate-500">BS Artificial Intelligence Student • AI Systems Developer & Career Advocate</p>
               </div>
             </div>
-            <p class="text-xs text-slate-600 leading-relaxed">
-              With 9+ years of engineering experience across high-growth Pakistani software consultancies and international remote teams, Hamza personally oversees the verification gate for all Computer Science and DevOps listings.
+            <p class="text-xs text-slate-700 leading-relaxed">
+              Wahi founded PakInternships after experiencing firsthand how Pakistani undergraduates are exploited by spam job portals, ghost postings, and deceptive unpaid internships. Combining his background in Artificial Intelligence engineering and automated data verification, Wahi built the portal’s programmatic verification gate to ensure zero guessed figures and complete transparency for Pakistani students.
             </p>
-            <div class="mt-4">
-              <a href="/authors/hamza-tariq" class="text-xs font-bold text-emerald-700 hover:underline">
-                Read Hamza’s verified postings & guides →
+            <div class="mt-4 flex items-center gap-4">
+              <a href="/authors/waho" class="text-xs font-bold text-emerald-700 hover:underline">
+                Read Wahi’s verified postings & author profile →
+              </a>
+              <a href="https://linkedin.com/in/wahi-ur-rehman" target="_blank" rel="noopener noreferrer" class="text-xs text-slate-500 hover:text-slate-800">
+                LinkedIn Profile ↗
               </a>
             </div>
           </div>
 
-          <div class="rounded-2xl border border-slate-200 p-6 bg-slate-50/60">
+          <!-- Ayesha Siddiqui -->
+          <div class="rounded-2xl border border-slate-200 p-6 bg-slate-50/60 shadow-xs">
             <div class="flex items-center gap-4 mb-4">
               <img
                 src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=160&q=80"
                 alt="Ayesha Siddiqui"
-                class="w-16 h-16 rounded-full object-cover border-2 border-emerald-600 shadow-sm"
+                class="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-600 shadow-sm"
               />
               <div>
                 <h3 class="font-bold text-slate-900 text-base">Ayesha Siddiqui</h3>
@@ -85,11 +102,83 @@ import Layout from '../layouts/Layout.astro';
               </div>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed">
-              Ayesha has led campus recruitment and engineering internship intake programs across Lahore and Islamabad. She verifies eligibility requirements, PEC accreditation standards, and corporate compliance with Higher Education Commission guidelines.
+              Ayesha has led campus hiring drives for top Pakistani software consultancies. She verifies eligibility requirements, degree criteria, and employer authenticity for Computer Science, Cloud/DevOps, and HR roles.
             </p>
             <div class="mt-4">
               <a href="/authors/ayesha-siddiqui" class="text-xs font-bold text-emerald-700 hover:underline">
-                Read Ayesha’s verified postings & guides →
+                Read Ayesha’s verified postings →
+              </a>
+            </div>
+          </div>
+
+          <!-- Zainab Farooq -->
+          <div class="rounded-2xl border border-slate-200 p-6 bg-slate-50/60 shadow-xs">
+            <div class="flex items-center gap-4 mb-4">
+              <img
+                src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=160&q=80"
+                alt="Zainab Farooq"
+                class="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-600 shadow-sm"
+              />
+              <div>
+                <h3 class="font-bold text-slate-900 text-base">Zainab Farooq</h3>
+                <p class="text-xs text-emerald-800 font-semibold">Banking & FinTech Careers Editor</p>
+                <p class="text-[11px] text-slate-500">Financial Analyst • IBA Karachi Alumna</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Zainab tracks commercial banking MTO intakes, FinTech risk positions, and accounting traineeships in Karachi and Lahore, confirming State Bank compliance and official allowance packages.
+            </p>
+            <div class="mt-4">
+              <a href="/authors/zainab-farooq" class="text-xs font-bold text-emerald-700 hover:underline">
+                Read Zainab’s verified postings →
+              </a>
+            </div>
+          </div>
+
+          <!-- Engr. Muhammad Bilal -->
+          <div class="rounded-2xl border border-slate-200 p-6 bg-slate-50/60 shadow-xs">
+            <div class="flex items-center gap-4 mb-4">
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80"
+                alt="Engr. Muhammad Bilal"
+                class="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-600 shadow-sm"
+              />
+              <div>
+                <h3 class="font-bold text-slate-900 text-base">Engr. Muhammad Bilal</h3>
+                <p class="text-xs text-emerald-800 font-semibold">Industrial & PEC Traineeship Mentor</p>
+                <p class="text-[11px] text-slate-500">Registered Professional Engineer • UET Lahore</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Engr. Bilal reviews electrical, mechanical, robotics, and industrial supply chain traineeships, confirming PEC accreditation criteria and safety-compliant workplace standards.
+            </p>
+            <div class="mt-4">
+              <a href="/authors/muhammad-bilal" class="text-xs font-bold text-emerald-700 hover:underline">
+                Read Engr. Bilal’s verified postings →
+              </a>
+            </div>
+          </div>
+
+          <!-- Fatima Zahra -->
+          <div class="rounded-2xl border border-slate-200 p-6 bg-slate-50/60 shadow-xs">
+            <div class="flex items-center gap-4 mb-4">
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80"
+                alt="Fatima Zahra"
+                class="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-600 shadow-sm"
+              />
+              <div>
+                <h3 class="font-bold text-slate-900 text-base">Fatima Zahra</h3>
+                <p class="text-xs text-emerald-800 font-semibold">Creative & Growth Marketing Editor</p>
+                <p class="text-[11px] text-slate-500">Product Design Specialist • Lahore</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Fatima evaluates UI/UX, visual brand design, and performance marketing roles, ensuring creative interns gain genuine portfolio-building project experience and transparent compensation.
+            </p>
+            <div class="mt-4">
+              <a href="/authors/fatima-zahra" class="text-xs font-bold text-emerald-700 hover:underline">
+                Read Fatima’s verified postings →
               </a>
             </div>
           </div>

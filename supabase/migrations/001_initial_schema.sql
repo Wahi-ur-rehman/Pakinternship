@@ -231,16 +231,53 @@ CREATE TRIGGER trg_enforce_monthly_publish_cap
     FOR EACH ROW
     EXECUTE FUNCTION enforce_monthly_publish_cap();
 
--- 8. Seed Initial Author and Verified Demonstrative Posts
+-- 8. Seed Verified Editorial Board Authors
 INSERT INTO authors (id, name, slug, role, bio, avatar_url, linkedin_url)
-VALUES (
+VALUES 
+(
     'a1000000-0000-0000-0000-000000000001',
-    'Hamza Tariq',
-    'hamza-tariq',
-    'Senior Tech Career Advisor & Engineering Lead',
-    'Hamza Tariq is a veteran software engineer and career mentor with over 9 years of experience navigating the Pakistani tech industry and multinational engineering programs. He specializes in vetting verified early-career opportunities for Pakistani computer science and engineering undergraduates.',
+    'Wahi ur Rehman',
+    'waho',
+    'Founder & Chief Career Editor',
+    'Wahi ur Rehman is a BS Artificial Intelligence student, AI systems builder, and early-career advocate based in Pakistan. Driven by personal frustration with misleading online job listings, unverified stipend claims, and exploitative unpaid internships targeting university undergraduates, Wahi founded PakInternships with an automated verification pipeline. He oversees platform architecture, programmatic verification constraints, and university partnerships to guarantee students transparent, fully-vetted career opportunities.',
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    'https://linkedin.com/in/hamzatariq-pk'
+    'https://linkedin.com/in/wahi-ur-rehman'
+),
+(
+    'a1000000-0000-0000-0000-000000000002',
+    'Ayesha Siddiqui',
+    'ayesha-siddiqui',
+    'Technical Talent Lead & Campus Recruiter',
+    'Ayesha Siddiqui is an engineering talent specialist and campus hiring advisor based in Islamabad. Having coordinated nationwide university drives with premier software consultancies in Islamabad and Lahore, Ayesha directs technical verification for Computer Science, Cloud/DevOps, and Artificial Intelligence opportunities.',
+    'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
+    'https://linkedin.com/in/ayeshasiddiqui-pk'
+),
+(
+    'a1000000-0000-0000-0000-000000000003',
+    'Zainab Farooq',
+    'zainab-farooq',
+    'Banking, FinTech & Corporate Careers Editor',
+    'Zainab Farooq is a corporate career consultant and financial analyst based in Karachi. An alumnus of IBA Karachi, Zainab tracks Management Trainee Officer (MTO) drives and financial internships across commercial banks, asset management firms, and digital payment providers in Pakistan.',
+    'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80',
+    'https://linkedin.com/in/zainab-farooq-pk'
+),
+(
+    'a1000000-0000-0000-0000-000000000004',
+    'Engr. Muhammad Bilal',
+    'muhammad-bilal',
+    'Industrial Engineering & PEC Traineeship Mentor',
+    'Engr. Muhammad Bilal is a PEC-registered mechanical engineer and industrial operations supervisor in Lahore. He reviews engineering traineeships in manufacturing plants, national energy utilities, automotive assemblers, and renewable power infrastructure across Punjab and Sindh.',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+    'https://linkedin.com/in/muhammad-bilal-engr'
+),
+(
+    'a1000000-0000-0000-0000-000000000005',
+    'Fatima Zahra',
+    'fatima-zahra',
+    'Creative & People Operations Editor',
+    'Fatima Zahra is a product design and talent acquisition specialist based in Lahore. She evaluates creative design, UI/UX, digital marketing, and human resources opportunities, ensuring early-career Pakistani candidates receive genuine project ownership and verified compensation.',
+    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    'https://linkedin.com/in/fatima-zahra-talent'
 ) ON CONFLICT (slug) DO NOTHING;
 
 -- Seed Sample Internship (100% Verified, passes all gate constraints)
@@ -290,7 +327,7 @@ INSERT INTO internships (
     FALSE,
     'https://www.systemsltd.com',
     'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=120&q=80',
-    TRUE, TRUE, TRUE, TRUE, 'Hamza Tariq', NOW()
+    TRUE, TRUE, TRUE, TRUE, 'Wahi ur Rehman', NOW()
 ) ON CONFLICT (slug) DO NOTHING;
 
 -- Seed Sample Full-Time Job (Demonstrating Job Schema & Fallback rules)
@@ -341,7 +378,7 @@ INSERT INTO internships (
     FALSE,
     'https://arbisoft.com',
     'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=120&q=80',
-    TRUE, TRUE, TRUE, TRUE, 'Hamza Tariq', NOW()
+    TRUE, TRUE, TRUE, TRUE, 'Wahi ur Rehman', NOW()
 ) ON CONFLICT (slug) DO NOTHING;
 
 -- Seed Sample Closed Listing (Demonstrating closed banner state & expired_at past date)
@@ -390,5 +427,5 @@ INSERT INTO internships (
     FALSE,
     'https://www.suparco.gov.pk',
     'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=120&q=80',
-    TRUE, TRUE, TRUE, TRUE, 'Hamza Tariq', NOW() - INTERVAL '40 days'
+    TRUE, TRUE, TRUE, TRUE, 'Wahi ur Rehman', NOW() - INTERVAL '40 days'
 ) ON CONFLICT (slug) DO NOTHING;

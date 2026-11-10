@@ -4,22 +4,30 @@
 // ==============================================================================
 
 import type { APIRoute } from 'astro';
+import { getAllAuthors } from '../lib/supabase';
 
 export const GET: APIRoute = async ({ site }) => {
   const baseUrl = site?.toString().replace(/\/$/, '') || 'https://pakistan-internships.pages.dev';
+  const authors = await getAllAuthors();
 
-  const pages = [
+  const staticPages = [
     { loc: '', priority: '1.0', changefreq: 'daily' },
     { loc: 'about', priority: '0.6', changefreq: 'monthly' },
     { loc: 'contact', priority: '0.6', changefreq: 'monthly' },
     { loc: 'privacy-policy', priority: '0.4', changefreq: 'monthly' },
     { loc: 'terms', priority: '0.4', changefreq: 'monthly' },
     { loc: 'disclaimer', priority: '0.4', changefreq: 'monthly' },
-    { loc: 'authors/hamza-tariq', priority: '0.7', changefreq: 'weekly' },
-    { loc: 'authors/ayesha-siddiqui', priority: '0.7', changefreq: 'weekly' },
   ];
 
-  const urls = pages
+  const authorPages = authors.map((a) => ({
+    loc: `authors/${a.slug}`,
+    priority: '0.7',
+    changefreq: 'weekly',
+  }));
+
+  const allPages = [...staticPages, ...authorPages];
+
+  const urls = allPages
     .map(
       (p) => `
   <url>
