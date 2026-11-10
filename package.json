@@ -14,7 +14,6 @@
     "cron:expiry": "tsx scripts/cron_expiry.ts"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^6.0.2",
     "@supabase/supabase-js": "^2.49.1",
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^5.4.2",
