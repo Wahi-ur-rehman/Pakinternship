@@ -241,7 +241,7 @@ VALUES
     'waho',
     'Founder & Chief Career Editor',
     'Wahi ur Rehman is a BS Artificial Intelligence student, AI systems builder, and early-career advocate based in Pakistan. Driven by personal frustration with misleading online job listings, unverified stipend claims, and exploitative unpaid internships targeting university undergraduates, Wahi founded PakInternships with an automated verification pipeline. He oversees platform architecture, programmatic verification constraints, and university partnerships to guarantee students transparent, fully-vetted career opportunities.',
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    '/images/authors/waho.jpg',
     'https://www.linkedin.com/in/wahi-abbasi-563593386',
     'https://github.com/Wahi-ur-rehman'
 ),
@@ -281,7 +281,7 @@ VALUES
     'fatima-zahra',
     'Creative & People Operations Editor',
     'Fatima Zahra is a product design and talent acquisition specialist based in Lahore. She evaluates creative design, UI/UX, digital marketing, and human resources opportunities, ensuring early-career Pakistani candidates receive genuine project ownership and verified compensation.',
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80',
     'https://linkedin.com/in/fatima-zahra-talent',
     NULL
 ) ON CONFLICT (slug) DO NOTHING;
