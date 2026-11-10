@@ -13,4 +13,4 @@ Disallow: /api/
 Disallow: /api
 
 # Crawl Delay & Search Console Sitemaps
-Sitemap: https://pakistan-internships.pages.dev/sitemap.xml
+Sitemap: https://pakinternship.king7577908654321.workers.dev/sitemap.xml
