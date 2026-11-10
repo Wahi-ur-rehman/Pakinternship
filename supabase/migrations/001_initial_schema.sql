@@ -209,15 +209,6 @@ BEGIN
         IF NEW.published_at IS NULL THEN
             NEW.published_at := NOW();
         END IF;
-
-        -- Log audit trail
-        INSERT INTO audit_logs (listing_id, action, actor, details)
-        VALUES (
-            NEW.id,
-            'PUBLISHED',
-            COALESCE(NEW.verified_by, 'admin'),
-            jsonb_build_object('slug', NEW.slug, 'monthly_count', v_count + 1, 'cap', v_cap)
-        );
     END IF;
 
     -- Update timestamp
@@ -231,6 +222,29 @@ CREATE TRIGGER trg_enforce_monthly_publish_cap
     BEFORE INSERT OR UPDATE ON internships
     FOR EACH ROW
     EXECUTE FUNCTION enforce_monthly_publish_cap();
+
+-- 7b. Trigger: Log audit trail AFTER row is saved in internships table
+CREATE OR REPLACE FUNCTION log_publish_audit()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.status = 'published' AND (TG_OP = 'INSERT' OR OLD.status IS NULL OR OLD.status <> 'published') THEN
+        INSERT INTO audit_logs (listing_id, action, actor, details)
+        VALUES (
+            NEW.id,
+            'PUBLISHED',
+            COALESCE(NEW.verified_by, 'admin'),
+            jsonb_build_object('slug', NEW.slug, 'verified_at', NEW.verified_at)
+        );
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_log_publish_audit ON internships;
+CREATE TRIGGER trg_log_publish_audit
+    AFTER INSERT OR UPDATE ON internships
+    FOR EACH ROW
+    EXECUTE FUNCTION log_publish_audit();
 
 -- 8. Seed Verified Editorial Board Authors
 INSERT INTO authors (id, name, slug, role, bio, avatar_url, linkedin_url, github_url)
