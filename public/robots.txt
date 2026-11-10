@@ -1,0 +1,16 @@
+# ==============================================================================
+# public/robots.txt
+# Technical SEO Crawl Directives for Pakistan Internships Portal
+# ==============================================================================
+
+User-agent: *
+Allow: /
+
+# Block Administrative & Internal APIs
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/
+Disallow: /api
+
+# Crawl Delay & Search Console Sitemaps
+Sitemap: https://pakistan-internships.pages.dev/sitemap.xml

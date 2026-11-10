@@ -1,0 +1,371 @@
+---
+// ==============================================================================
+// src/pages/[category]/[slug].astro
+// Production Listing Page Template for Pakistan Internships & Tech Jobs
+// ==============================================================================
+
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { getOpenAndClosedListings, getAuthorById } from '../../lib/supabase';
+import { generateJobPostingSchema } from '../../lib/schema';
+import type { Listing, Author } from '../../types/portal';
+
+export async function getStaticPaths() {
+  const listings = await getOpenAndClosedListings();
+
+  return listings.map((listing) => {
+    // Find up to 3 related open listings in the same category
+    const related = listings
+      .filter((l) => l.category === listing.category && l.id !== listing.id && l.status === 'published')
+      .slice(0, 3);
+
+    return {
+      params: {
+        category: listing.category,
+        slug: listing.slug,
+      },
+      props: {
+        listing,
+        related,
+      },
+    };
+  });
+}
+
+interface Props {
+  listing: Listing;
+  related: Listing[];
+}
+
+const { listing, related } = Astro.props;
+const author: Author | undefined = await getAuthorById(listing.author_id);
+
+const isClosed = listing.status === 'closed';
+const isInternship = listing.employment_type === 'INTERN';
+const currentYear = new Date().getFullYear();
+
+// Section 3 & 10 Non-Negotiable Fallbacks
+const stipendDisplay = listing.stipend || 'Not disclosed by the employer';
+const deadlineDisplay = listing.deadline
+  ? new Date(listing.deadline).toLocaleDateString('en-PK', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+  : 'Rolling / Apply ASAP';
+
+// Closed banner date formatting
+const closedDateDisplay = listing.expired_at
+  ? new Date(listing.expired_at).toLocaleDateString('en-PK', { day: 'numeric', month: 'long', year: 'numeric' })
+  : listing.deadline
+  ? new Date(listing.deadline).toLocaleDateString('en-PK', { day: 'numeric', month: 'long', year: 'numeric' })
+  : 'Recently';
+
+// H1 in strict format: [Role] at [Company] – [Location] – [Year]
+const pageH1 = `${listing.title} at ${listing.company} – ${listing.location} – ${currentYear}`;
+const pageTitle = pageH1;
+
+// Generate Schema (Section 9 & 9B)
+const jsonLd = generateJobPostingSchema(listing);
+---
+
+<Layout
+  title={pageTitle}
+  description={listing.meta_description}
+  ogType="article"
+>
+  <!-- Section 9B: JobPosting JSON-LD injected strictly on single post pages -->
+  <Fragment slot="schema">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd, null, 2)} />
+  </Fragment>
+
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Breadcrumbs -->
+    <nav class="flex items-center gap-2 text-xs text-slate-500 mb-6">
+      <a href="/" class="hover:text-emerald-700">Home</a>
+      <span>/</span>
+      <a href={`/${listing.category}`} class="capitalize hover:text-emerald-700">
+        {listing.category.replace('-', ' ')}
+      </a>
+      <span>/</span>
+      <span class="text-slate-800 truncate max-w-xs">{listing.title}</span>
+    </nav>
+
+    <!-- CLOSED STATE BANNER (Section 8: Never delete, keep live, mark closed) -->
+    {isClosed && (
+      <div class="mb-8 rounded-2xl bg-amber-50 border border-amber-200 p-5 text-amber-900 shadow-sm">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">⚠️</span>
+          <div>
+            <h2 class="text-base font-bold text-amber-950">
+              Applications Closed on {closedDateDisplay}
+            </h2>
+            <p class="text-xs text-amber-800 mt-1 leading-relaxed">
+              This posting is preserved for historical reference and salary benchmarking. Applications for this intake cycle have ended. Please explore open alternatives in {listing.category.replace('-', ' ')} below.
+            </p>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <!-- Header Section: H1 with Badge -->
+    <header class="mb-8">
+      <div class="flex flex-wrap items-center gap-2 mb-3">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-100 text-emerald-800">
+          {listing.employment_type === 'INTERN' ? 'Internship' : 'Full-Time Job'}
+        </span>
+        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 uppercase">
+          {listing.mode}
+        </span>
+        {listing.featured && (
+          <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-100 text-amber-800">
+            ★ Featured Opportunity
+          </span>
+        )}
+      </div>
+
+      <!-- H1 in strict format: [Role] at [Company] – [Location] – [Year] -->
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+        {pageH1}
+      </h1>
+
+      <p class="mt-2 text-sm text-slate-500">
+        Published on {listing.published_at ? new Date(listing.published_at).toLocaleDateString('en-PK', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Verified'} 
+        • Source Verified on {listing.source_checked_on}
+      </p>
+    </header>
+
+    <!-- Quick Facts Table (Section 10) -->
+    <section class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden mb-8">
+      <div class="bg-slate-900 text-white px-5 py-3">
+        <h2 class="text-sm font-semibold tracking-wide uppercase">Opportunity Overview & Quick Facts</h2>
+      </div>
+      <dl class="divide-y divide-slate-100 text-sm">
+        <div class="px-5 py-3.5 sm:grid sm:grid-cols-3 sm:gap-4 bg-white">
+          <dt class="font-medium text-slate-500">Position Title</dt>
+          <dd class="mt-1 font-semibold text-slate-900 sm:col-span-2 sm:mt-0">{listing.title}</dd>
+        </div>
+        <div class="px-5 py-3.5 sm:grid sm:grid-cols-3 sm:gap-4 bg-slate-50/50">
+          <dt class="font-medium text-slate-500">Hiring Organization</dt>
+          <dd class="mt-1 font-semibold text-slate-900 sm:col-span-2 sm:mt-0">{listing.company}</dd>
+        </div>
+        <div class="px-5 py-3.5 sm:grid sm:grid-cols-3 sm:gap-4 bg-white">
+          <dt class="font-medium text-slate-500">Location & Work Mode</dt>
+          <dd class="mt-1 text-slate-900 sm:col-span-2 sm:mt-0">
+            <span class="font-semibold">{listing.location}</span> ({listing.mode.toUpperCase()})
+          </dd>
+        </div>
+        <div class="px-5 py-3.5 sm:grid sm:grid-cols-3 sm:gap-4 bg-slate-50/50">
+          <dt class="font-medium text-slate-500">Stipend / Compensation</dt>
+          <dd class="mt-1 font-bold sm:col-span-2 sm:mt-0 text-emerald-700">
+            {stipendDisplay}
+          </dd>
+        </div>
+        <div class="px-5 py-3.5 sm:grid sm:grid-cols-3 sm:gap-4 bg-white">
+          <dt class="font-medium text-slate-500">Application Deadline</dt>
+          <dd class="mt-1 sm:col-span-2 sm:mt-0 font-semibold text-slate-900">
+            {deadlineDisplay}
+          </dd>
+        </div>
+        <div class="px-5 py-3.5 sm:grid sm:grid-cols-3 sm:gap-4 bg-slate-50/50">
+          <dt class="font-medium text-slate-500">Nationality Eligibility</dt>
+          <dd class="mt-1 sm:col-span-2 sm:mt-0 text-slate-900 font-semibold text-emerald-900">
+            🇵🇰 {listing.eligibility_nationality}
+          </dd>
+        </div>
+        <div class="px-5 py-3.5 sm:grid sm:grid-cols-3 sm:gap-4 bg-white">
+          <dt class="font-medium text-slate-500">Academic Prerequisite</dt>
+          <dd class="mt-1 sm:col-span-2 sm:mt-0 text-slate-700">{listing.eligibility_degree}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- AdSense Slot 1: Never above H1, placed after quick facts table -->
+    <AdSlot slotId="ad-slot-1-after-quickfacts" />
+
+    <!-- Editorial Intro (60-80 words) -->
+    <section class="mb-8 prose prose-slate max-w-none">
+      <h2 class="text-xl font-bold text-slate-900 mb-3">Role Introduction</h2>
+      <p class="text-base text-slate-700 leading-relaxed bg-white p-5 rounded-2xl border border-slate-200">
+        {listing.intro}
+      </p>
+    </section>
+
+    <!-- Key Responsibilities (4-6 bullets with active verbs) -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-slate-900 mb-4">Key Responsibilities</h2>
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <ul class="space-y-3">
+          {listing.responsibilities.map((resp) => (
+            <li class="flex items-start gap-3 text-sm text-slate-700 leading-relaxed">
+              <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs shrink-0 mt-0.5 font-bold">
+                ✓
+              </span>
+              <span>{resp}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- AdSense Slot 2: Mid-Content Placement -->
+    <AdSlot slotId="ad-slot-2-mid-content" />
+
+    <!-- Eligibility & Required Skills -->
+    <section class="mb-8">
+      <h2 class="text-xl font-bold text-slate-900 mb-4">Eligibility & Skill Requirements</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Academic Criteria -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3 flex items-center gap-2">
+            <span>🎓</span> Academic & Demographic Criteria
+          </h3>
+          <ul class="space-y-2 text-xs text-slate-600">
+            <li><strong>Degree:</strong> {listing.eligibility_degree}</li>
+            <li><strong>Nationality:</strong> {listing.eligibility_nationality}</li>
+            {listing.eligibility_cgpa && <li><strong>CGPA:</strong> {listing.eligibility_cgpa}</li>}
+            {listing.eligibility_age && <li><strong>Age:</strong> {listing.eligibility_age}</li>}
+          </ul>
+        </div>
+
+        <!-- Technical Skills -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3 flex items-center gap-2">
+            <span>💻</span> Evaluated Tech Stack
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            {listing.skills.map((skill) => (
+              <span class="text-xs font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded-lg border border-slate-200">
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resume & Interview Tips (3-4 role-specific tips) -->
+    <section class="mb-10">
+      <h2 class="text-xl font-bold text-slate-900 mb-4">Resume & Interview Preparation Tips</h2>
+      <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-6">
+        <div class="space-y-3">
+          {listing.tips.map((tip, idx) => (
+            <div class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                {idx + 1}
+              </span>
+              <p class="text-xs sm:text-sm text-emerald-950 leading-relaxed font-medium">
+                {tip}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- How to Apply Action Box -->
+    <section class="mb-12 bg-white rounded-2xl border-2 border-emerald-600 p-6 sm:p-8 text-center shadow-md">
+      <h2 class="text-xl font-bold text-slate-900">How to Apply for this Opportunity</h2>
+      <p class="text-xs sm:text-sm text-slate-600 mt-2 max-w-xl mx-auto">
+        Please verify your eligibility requirements and CV formatting before proceeding to the employer's official career portal.
+      </p>
+
+      <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+        {!isClosed ? (
+          <a
+            href={listing.company_website || '#'}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-sm transition"
+          >
+            Apply on Official Career Portal ↗
+          </a>
+        ) : (
+          <button
+            disabled
+            class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-slate-300 text-slate-600 font-bold text-sm cursor-not-allowed"
+          >
+            Applications Closed for this Cycle
+          </button>
+        )}
+      </div>
+
+      <p class="text-[11px] text-slate-400 mt-4">
+        Direct application takes place on {listing.company}'s official domains. We never charge application fees.
+      </p>
+    </section>
+
+    <!-- Author Byline (Section 3 & 10 E-E-A-T requirement) -->
+    {author && (
+      <section class="mb-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+          {author.avatar_url && (
+            <img
+              src={author.avatar_url}
+              alt={author.name}
+              class="w-16 h-16 rounded-full object-cover border-2 border-emerald-600 shadow-sm"
+              loading="lazy"
+            />
+          )}
+          <div class="text-center sm:text-left flex-1">
+            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                Verified Career Lead
+              </span>
+              <span class="text-xs text-slate-400">• Fact-Checked By</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mt-1">
+              <a href={`/authors/${author.slug}`} class="hover:text-emerald-700 transition">
+                {author.name}
+              </a>
+            </h3>
+            <p class="text-xs text-slate-500 font-medium">{author.role}</p>
+            <p class="text-xs text-slate-600 mt-2 leading-relaxed">{author.bio}</p>
+            <div class="mt-3">
+              <a
+                href={`/authors/${author.slug}`}
+                class="text-xs font-semibold text-emerald-700 hover:underline"
+              >
+                View all articles and verified postings by {author.name} →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Related Open Listings in this Category (Section 8 & 10) -->
+    {related.length > 0 && (
+      <section class="mb-12">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold text-slate-900">
+            More Open Opportunities in {listing.category.replace('-', ' ')}
+          </h2>
+          <a href={`/${listing.category}`} class="text-xs font-semibold text-emerald-700 hover:underline">
+            View All →
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {related.map((rel) => (
+            <a
+              href={`/${rel.category}/${rel.slug}`}
+              class="block bg-white rounded-xl border border-slate-200 p-4 hover:border-emerald-500 hover:shadow-md transition"
+            >
+              <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded uppercase">
+                {rel.employment_type === 'INTERN' ? 'Internship' : 'Job'}
+              </span>
+              <h3 class="font-bold text-slate-900 text-sm mt-2 line-clamp-1">{rel.title}</h3>
+              <p class="text-xs text-slate-600 mt-1">{rel.company} • {rel.location}</p>
+              <p class="text-xs font-semibold text-emerald-800 mt-3">
+                {rel.stipend || 'View Details'}
+              </p>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- AdSense Slot 3: Pre-Footer -->
+    <AdSlot slotId="ad-slot-3-pre-footer" />
+  </article>
+</Layout>

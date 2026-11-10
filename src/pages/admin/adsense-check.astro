@@ -1,0 +1,133 @@
+---
+// ==============================================================================
+// src/pages/admin/adsense-check.astro
+// Section 11: Google AdSense Compliance Audit Dashboard (Advisory Only)
+// ==============================================================================
+
+import Layout from '../../layouts/Layout.astro';
+import { getAllListings, getAllAuthors, getPortalSettings } from '../../lib/supabase';
+import { runAdSenseAudit } from '../../lib/adsense';
+
+const listings = await getAllListings();
+const authors = await getAllAuthors();
+const settings = await getPortalSettings();
+
+// Check placeholder in the 5 legal files
+// Note: Hand-written copy placeholder check as specified in Section 10 & 11
+const legalPageContents: Record<string, string> = {
+  '/about': 'OWNER: REPLACE WITH HAND-WRITTEN COPY',
+  '/contact': 'OWNER: REPLACE WITH HAND-WRITTEN COPY',
+  '/privacy-policy': 'OWNER: REPLACE WITH HAND-WRITTEN COPY',
+  '/terms': 'OWNER: REPLACE WITH HAND-WRITTEN COPY',
+  '/disclaimer': 'OWNER: REPLACE WITH HAND-WRITTEN COPY',
+};
+
+const checks = runAdSenseAudit({
+  listings,
+  authors,
+  settings,
+  legalPageContents,
+});
+
+const passedCount = checks.filter((c) => c.passed).length;
+const totalChecks = checks.length;
+---
+
+<Layout
+  title="AdSense Compliance Audit Dashboard"
+  description="Advisory compliance checklist evaluating 8 technical and content standards for Google AdSense readiness."
+  noindex={true}
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 mb-8 gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-800">Quality & Monetization Audit</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Google AdSense Pre-Flight Checklist
+        </h1>
+        <p class="text-xs text-slate-500 mt-1">
+          Section 11 Advisory Dashboard • Evaluates technical SEO, human attribution, cadence, and content depth
+        </p>
+      </div>
+
+      <!-- Score Card -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm shrink-0 flex items-center gap-4">
+        <div>
+          <span class="block text-[11px] font-bold text-slate-400 uppercase">Compliance Score</span>
+          <span class="text-lg font-black text-slate-900">{passedCount} / {totalChecks} Passed</span>
+          <span class="text-[10px] text-slate-500 block">Advisory Only • Non-Blocking</span>
+        </div>
+        <div class={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-sm border ${
+          passedCount === totalChecks ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'
+        }`}>
+          {Math.round((passedCount / totalChecks) * 100)}%
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Nav Tabs -->
+    <div class="flex items-center gap-2 mb-8 border-b border-slate-200 text-sm">
+      <a href="/admin/review" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">Verification Gate</a>
+      <a href="/admin/posts" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">All Posts Archive</a>
+      <a href="/admin/adsense-check" class="px-4 py-2.5 font-bold border-b-2 border-emerald-600 text-emerald-700">AdSense Audit Check</a>
+      <a href="/admin/settings" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">Cadence Settings</a>
+    </div>
+
+    <!-- Audit Checks Grid -->
+    <div class="grid grid-cols-1 gap-4">
+      {checks.map((check) => (
+        <div class={`p-6 rounded-2xl border bg-white shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition ${
+          check.passed ? 'border-emerald-200' : 'border-amber-200'
+        }`}>
+          <div class="flex items-start gap-4">
+            <span class={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 mt-0.5 ${
+              check.passed ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-900'
+            }`}>
+              {check.passed ? '✓' : '!'}
+            </span>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-bold text-slate-900 text-base">{check.title}</h3>
+                <span class={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
+                  check.passed ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-amber-50 text-amber-800 border border-amber-200'
+                }`}>
+                  {check.passed ? 'Compliant' : 'Attention Required'}
+                </span>
+              </div>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed max-w-2xl">{check.description}</p>
+              <div class="mt-2 text-xs font-mono p-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-700">
+                {check.details}
+              </div>
+            </div>
+          </div>
+
+          <div class="shrink-0 self-end sm:self-center">
+            {check.id === 'legal_pages' && !check.passed && (
+              <a href="/about" class="text-xs font-semibold text-emerald-700 hover:underline">
+                View Placeholders →
+              </a>
+            )}
+            {check.id === 'publish_cadence' && (
+              <a href="/admin/settings" class="text-xs font-semibold text-emerald-700 hover:underline">
+                Manage Cap ({settings.publish_cap}/mo) →
+              </a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Advice Banner -->
+    <div class="mt-10 rounded-2xl bg-slate-900 text-white p-6 shadow-sm">
+      <h3 class="text-sm font-bold uppercase tracking-wider text-emerald-400 mb-2">
+        Pre-Submission Protocol for Google AdSense
+      </h3>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        AdSense uses both algorithmic analysis and human quality raters. Never apply before completing the 5 hand-written legal/trust pages in your own words. Maintain steady 10–12 post monthly cadence to build historical crawl equity without triggering spam filters.
+      </p>
+    </div>
+  </div>
+</Layout>

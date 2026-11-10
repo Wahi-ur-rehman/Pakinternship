@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Production build outputs
+dist/
+.astro/
+
+# Environment files
+.env
+.env.production
+
+# OS and Editor metadata
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

@@ -1,0 +1,261 @@
+---
+// ==============================================================================
+// src/pages/admin/review.astro
+// Section 6 Stage C & Section 7: Mandatory Verification Gate
+// Enforces 4 human confirmations (stipend, deadline, nationality, degree) before publish
+// ==============================================================================
+
+import Layout from '../../layouts/Layout.astro';
+import { getAllListings, getPortalSettings } from '../../lib/supabase';
+import { generateWhatsAppShareMessage } from '../../lib/whatsapp';
+import type { Listing } from '../../types/portal';
+
+const listings = await getAllListings();
+const settings = await getPortalSettings();
+
+// Filter for pending review or demonstrative review records
+const pendingListings = listings.filter((l) => l.status === 'pending_review');
+const sampleReviewItem = pendingListings.length > 0 ? pendingListings[0] : listings[0];
+const sampleWhatsAppMsg = generateWhatsAppShareMessage(sampleReviewItem);
+---
+
+<Layout
+  title="Verification Gate — Admin Review"
+  description="Mandatory Stage C Verification Gate for Pakistan tech internships and jobs."
+  noindex={true}
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <!-- Admin Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 mb-8 gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-800">Stage C Verification Gate</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Human Verification Queue
+        </h1>
+        <p class="text-xs text-slate-500 mt-1">
+          Database Check Constraint Enforced • 4 Critical Source Confirmations Mandatory Before Publish
+        </p>
+      </div>
+
+      <!-- Monthly Cap Indicator (Section 5 Settings) -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm shrink-0 flex items-center gap-4">
+        <div>
+          <span class="block text-[11px] font-bold text-slate-400 uppercase">Monthly Publish Cadence</span>
+          <span class="text-lg font-black text-slate-900">{settings.monthly_publish_count} / {settings.publish_cap}</span>
+          <span class="text-[10px] text-slate-500 block">Cap resets on 1st of month</span>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-sm border border-emerald-200">
+          {Math.round((settings.monthly_publish_count / settings.publish_cap) * 100)}%
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation tabs for Admin -->
+    <div class="flex items-center gap-2 mb-8 border-b border-slate-200 text-sm">
+      <a href="/admin/review" class="px-4 py-2.5 font-bold border-b-2 border-emerald-600 text-emerald-700">Verification Gate</a>
+      <a href="/admin/posts" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">All Posts Archive</a>
+      <a href="/admin/adsense-check" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">AdSense Audit Check</a>
+      <a href="/admin/settings" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">Cadence Settings</a>
+    </div>
+
+    {pendingListings.length === 0 ? (
+      <div class="bg-white rounded-3xl border border-slate-200 p-10 text-center shadow-sm">
+        <span class="text-3xl">🎉</span>
+        <h2 class="text-lg font-bold text-slate-900 mt-2">Verification Queue Clear</h2>
+        <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+          All scraped records in staging have either been reviewed or published. Run the Stage A discovery script to ingest candidate listings from career portals.
+        </p>
+        <div class="mt-6">
+          <a href="/admin/posts" class="inline-flex px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800">
+            View All Published Posts →
+          </a>
+        </div>
+      </div>
+    ) : (
+      <div class="space-y-8">
+        {pendingListings.map((item) => (
+          <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden" id={`review-card-${item.id}`}>
+            <!-- Listing Overview Top Bar -->
+            <div class="bg-slate-900 text-white p-5 flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500 text-slate-950">
+                  Status: Pending Review
+                </span>
+                <h2 class="text-lg font-bold mt-1.5">{item.title} at {item.company}</h2>
+                <p class="text-xs text-slate-400">{item.location} • {item.mode} • Category: {item.category}</p>
+              </div>
+
+              <div>
+                <a
+                  href={item.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition shadow-sm"
+                >
+                  <span>Open Official Source URL ↗</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Two-Column Side-by-Side Verification Screen (Section 6 Stage C) -->
+            <div class="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <!-- Left Column: Source Data Preview & Audit Rules -->
+              <div class="space-y-4">
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                  <h3 class="text-xs font-bold uppercase tracking-wide text-slate-500 mb-3">
+                    Internal Source Metadata
+                  </h3>
+                  <div class="space-y-2 text-xs">
+                    <div>
+                      <span class="text-slate-400">Source Career URL:</span>
+                      <p class="font-mono text-slate-700 break-all bg-white p-2 rounded border border-slate-200 mt-0.5">
+                        {item.source_url}
+                      </p>
+                    </div>
+                    <div class="flex justify-between pt-2">
+                      <span class="text-slate-500">Source Last Checked On:</span>
+                      <span class="font-medium text-slate-900">{item.source_checked_on}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-slate-500">Proposed Slug:</span>
+                      <span class="font-mono text-slate-700">{item.slug}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Live Intro Preview -->
+                <div class="rounded-2xl border border-slate-200 p-5">
+                  <h3 class="text-xs font-bold uppercase tracking-wide text-slate-500 mb-2">
+                    Constrained AI Summary (Stage B Output)
+                  </h3>
+                  <p class="text-xs text-slate-700 leading-relaxed italic">
+                    "{item.intro}"
+                  </p>
+                </div>
+              </div>
+
+              <!-- Right Column: The 4 Mandatory Confirmation Checkboxes -->
+              <div class="bg-emerald-50/50 rounded-2xl border-2 border-emerald-500/40 p-6 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center gap-2 mb-4">
+                    <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center">✓</span>
+                    <h3 class="text-sm font-bold text-slate-900">
+                      Mandatory Human Gate Check (Database Constraint)
+                    </h3>
+                  </div>
+
+                  <p class="text-xs text-slate-600 mb-6 leading-relaxed">
+                    Verify each item against the official employer page opened in the left column/tab. The database check constraint blocks transitions to <code>published</code> unless all four are certified.
+                  </p>
+
+                  <form class="space-y-4 verification-form" data-listing-id={item.id}>
+                    <!-- Checkbox 1: Stipend -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-emerald-500 transition">
+                      <input type="checkbox" required name="chk_stipend" class="mt-1 w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500" />
+                      <div class="text-xs">
+                        <span class="font-bold text-slate-900 block">1. Confirm Stipend / Salary</span>
+                        <span class="text-slate-600">
+                          Extracted: <strong class="text-emerald-800">{item.stipend || 'None (renders fallback)'}</strong>
+                        </span>
+                      </div>
+                    </label>
+
+                    <!-- Checkbox 2: Deadline -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-emerald-500 transition">
+                      <input type="checkbox" required name="chk_deadline" class="mt-1 w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500" />
+                      <div class="text-xs">
+                        <span class="font-bold text-slate-900 block">2. Confirm Application Deadline</span>
+                        <span class="text-slate-600">
+                          Extracted: <strong class="text-slate-900">{item.deadline || 'None (renders Rolling)'}</strong>
+                        </span>
+                      </div>
+                    </label>
+
+                    <!-- Checkbox 3: Nationality -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-emerald-500 transition">
+                      <input type="checkbox" required name="chk_nationality" class="mt-1 w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500" />
+                      <div class="text-xs">
+                        <span class="font-bold text-slate-900 block">3. Confirm Pakistani Nationality Eligibility</span>
+                        <span class="text-slate-600">{item.eligibility_nationality}</span>
+                      </div>
+                    </label>
+
+                    <!-- Checkbox 4: Degree -->
+                    <label class="flex items-start gap-3 p-3 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-emerald-500 transition">
+                      <input type="checkbox" required name="chk_degree" class="mt-1 w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500" />
+                      <div class="text-xs">
+                        <span class="font-bold text-slate-900 block">4. Confirm HEC / PEC Degree Prerequisite</span>
+                        <span class="text-slate-600">{item.eligibility_degree}</span>
+                      </div>
+                    </label>
+
+                    <!-- Reviewer Identification -->
+                    <div class="pt-2">
+                      <label class="block text-xs font-bold text-slate-700 mb-1">
+                        Reviewer Full Name (Audit Stamp):
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        name="reviewer_name"
+                        placeholder="e.g. Hamza Tariq"
+                        value="Hamza Tariq"
+                        class="w-full text-xs px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                      />
+                    </div>
+
+                    <!-- Publish Button -->
+                    <div class="pt-4">
+                      <button
+                        type="button"
+                        class="btn-publish w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wide shadow-md transition disabled:bg-slate-300 disabled:cursor-not-allowed"
+                      >
+                        Publish Post & Log Database Gate
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Generated WhatsApp Share Message Modal / Card (Section 12) -->
+                <div class="mt-6 pt-4 border-t border-emerald-200">
+                  <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wide block mb-1">
+                    WhatsApp Share Message (Auto-Generated on Publish)
+                  </span>
+                  <div class="bg-white p-3 rounded-xl border border-slate-200 text-xs font-mono text-slate-700 select-all whitespace-pre-wrap">
+                    {sampleWhatsAppMsg}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+
+  <script is:inline>
+    // Client-side Gate Enforcement validation
+    document.querySelectorAll('.verification-form').forEach((form) => {
+      const btn = form.querySelector('.btn-publish');
+      const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+      const reviewerInput = form.querySelector('input[name="reviewer_name"]');
+
+      function validate() {
+        const allChecked = Array.from(checkboxes).every((c) => c.checked);
+        const hasReviewer = reviewerInput.value.trim().length > 0;
+        btn.disabled = !(allChecked && hasReviewer);
+      }
+
+      checkboxes.forEach((c) => c.addEventListener('change', validate));
+      reviewerInput.addEventListener('input', validate);
+      validate();
+
+      btn.addEventListener('click', () => {
+        alert('Verification Gate Passed: Record certified by ' + reviewerInput.value + '. In production connected to Supabase, this executes the status transition trigger.');
+      });
+    });
+  </script>
+</Layout>

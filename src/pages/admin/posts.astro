@@ -1,0 +1,125 @@
+---
+// ==============================================================================
+// src/pages/admin/posts.astro
+// Admin Post Management & Status Transitions
+// ==============================================================================
+
+import Layout from '../../layouts/Layout.astro';
+import { getAllListings, getPortalSettings } from '../../lib/supabase';
+
+const listings = await getAllListings();
+const settings = await getPortalSettings();
+---
+
+<Layout
+  title="All Listings — Admin Manager"
+  description="Manage drafts, pending reviews, published, closed, and archived opportunities."
+  noindex={true}
+>
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 mb-8 gap-4">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          All Opportunity Listings
+        </h1>
+        <p class="text-xs text-slate-500 mt-1">
+          Tracking {listings.length} total database records across lifecycle states.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a
+          href="/admin/review"
+          class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition"
+        >
+          Open Verification Queue →
+        </a>
+      </div>
+    </div>
+
+    <!-- Admin Nav Tabs -->
+    <div class="flex items-center gap-2 mb-8 border-b border-slate-200 text-sm">
+      <a href="/admin/review" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">Verification Gate</a>
+      <a href="/admin/posts" class="px-4 py-2.5 font-bold border-b-2 border-emerald-600 text-emerald-700">All Posts Archive</a>
+      <a href="/admin/adsense-check" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">AdSense Audit Check</a>
+      <a href="/admin/settings" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">Cadence Settings</a>
+    </div>
+
+    <!-- Posts Table -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs divide-y divide-slate-200">
+          <thead class="bg-slate-50 text-slate-500 uppercase font-semibold">
+            <tr>
+              <th class="px-5 py-4">Title & Company</th>
+              <th class="px-5 py-4">Category</th>
+              <th class="px-5 py-4">Status</th>
+              <th class="px-5 py-4">Stipend</th>
+              <th class="px-5 py-4">Deadline</th>
+              <th class="px-5 py-4">Verified By</th>
+              <th class="px-5 py-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700">
+            {listings.map((item) => (
+              <tr class="hover:bg-slate-50/50 transition">
+                <td class="px-5 py-4 font-semibold text-slate-900">
+                  <div class="truncate max-w-xs">{item.title}</div>
+                  <div class="text-[11px] text-slate-500 font-normal">{item.company} • {item.location}</div>
+                </td>
+                <td class="px-5 py-4 capitalize font-medium">{item.category.replace('-', ' ')}</td>
+                <td class="px-5 py-4">
+                  {item.status === 'published' && (
+                    <span class="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                      Published
+                    </span>
+                  )}
+                  {item.status === 'pending_review' && (
+                    <span class="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">
+                      Pending Review
+                    </span>
+                  )}
+                  {item.status === 'closed' && (
+                    <span class="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-800">
+                      Closed (Live)
+                    </span>
+                  )}
+                  {item.status === 'archived' && (
+                    <span class="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">
+                      Archived (301)
+                    </span>
+                  )}
+                </td>
+                <td class="px-5 py-4 font-mono font-medium text-slate-800">
+                  {item.stipend || <span class="text-slate-400 italic">Fallback rendered</span>}
+                </td>
+                <td class="px-5 py-4 text-slate-600">
+                  {item.deadline || <span class="text-slate-400 italic">Rolling</span>}
+                </td>
+                <td class="px-5 py-4 text-slate-600">
+                  {item.verified_by ? (
+                    <span class="font-medium text-emerald-800">✓ {item.verified_by}</span>
+                  ) : (
+                    <span class="text-amber-700">Uncertified</span>
+                  )}
+                </td>
+                <td class="px-5 py-4 text-right">
+                  {item.status === 'pending_review' ? (
+                    <a href="/admin/review" class="text-emerald-700 font-bold hover:underline">
+                      Verify Gate →
+                    </a>
+                  ) : (
+                    <a href={`/${item.category}/${item.slug}`} class="text-slate-700 hover:text-emerald-700 font-medium">
+                      View Live ↗
+                    </a>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</Layout>

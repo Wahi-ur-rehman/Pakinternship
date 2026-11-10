@@ -1,0 +1,79 @@
+---
+// ==============================================================================
+// src/pages/admin/settings.astro
+// Cadence Settings & Scaled Content Policy Protection
+// ==============================================================================
+
+import Layout from '../../layouts/Layout.astro';
+import { getPortalSettings } from '../../lib/supabase';
+
+const settings = await getPortalSettings();
+---
+
+<Layout
+  title="Publishing Cadence & Policy Settings"
+  description="Manage publish caps, automated monthly resets, and anti-spam rate limiting."
+  noindex={true}
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+    <!-- Header -->
+    <div class="pb-6 border-b border-slate-200 mb-8">
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        Publishing Cadence & Settings
+      </h1>
+      <p class="text-xs text-slate-500 mt-1">
+        Hardcoded protection against Google Scaled Content Abuse (Policy Cap: 12 posts/month)
+      </p>
+    </div>
+
+    <!-- Admin Nav Tabs -->
+    <div class="flex items-center gap-2 mb-8 border-b border-slate-200 text-sm">
+      <a href="/admin/review" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">Verification Gate</a>
+      <a href="/admin/posts" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">All Posts Archive</a>
+      <a href="/admin/adsense-check" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">AdSense Audit Check</a>
+      <a href="/admin/settings" class="px-4 py-2.5 font-bold border-b-2 border-emerald-600 text-emerald-700">Cadence Settings</a>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm space-y-8">
+      <div>
+        <h2 class="text-lg font-bold text-slate-900 mb-1">Monthly Publishing Cadence</h2>
+        <p class="text-xs text-slate-500 leading-relaxed">
+          Google Search Console quality guidelines penalize websites exhibiting unnatural bursts of automated programmatic content. By enforcing a hard ceiling of 12 verified posts per calendar month, the portal signals deliberate human curation.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="bg-slate-50 rounded-2xl border border-slate-200 p-5">
+          <span class="block text-[11px] font-bold text-slate-400 uppercase">Current Month Published</span>
+          <span class="text-2xl font-black text-slate-900 mt-1 block">{settings.monthly_publish_count}</span>
+          <span class="text-[11px] text-slate-500 mt-1 block">Tracked by DB Trigger</span>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl border border-slate-200 p-5">
+          <span class="block text-[11px] font-bold text-slate-400 uppercase">Policy Ceiling (Cap)</span>
+          <span class="text-2xl font-black text-emerald-700 mt-1 block">{settings.publish_cap}</span>
+          <span class="text-[11px] text-slate-500 mt-1 block">Maximum allowed per month</span>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl border border-slate-200 p-5">
+          <span class="block text-[11px] font-bold text-slate-400 uppercase">Last Billing Reset</span>
+          <span class="text-sm font-bold text-slate-900 mt-2 block font-mono">{settings.last_reset_month}</span>
+          <span class="text-[11px] text-slate-500 mt-1 block">Auto-resets on month change</span>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-100 flex items-center justify-between">
+        <div class="text-xs text-slate-500">
+          Enforced via SQL Trigger: <code class="bg-slate-100 px-2 py-0.5 rounded font-mono text-slate-700">enforce_monthly_publish_cap()</code>
+        </div>
+        <button
+          type="button"
+          onclick="alert('Database trigger enforce_monthly_publish_cap() prevents updates exceeding the 12 post safety ceiling.')"
+          class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition"
+        >
+          Audit Constraint Status
+        </button>
+      </div>
+    </div>
+  </div>
+</Layout>
