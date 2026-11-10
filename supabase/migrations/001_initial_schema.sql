@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS authors (
     bio TEXT NOT NULL,
     avatar_url TEXT,
     linkedin_url TEXT,
+    github_url TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -232,7 +233,7 @@ CREATE TRIGGER trg_enforce_monthly_publish_cap
     EXECUTE FUNCTION enforce_monthly_publish_cap();
 
 -- 8. Seed Verified Editorial Board Authors
-INSERT INTO authors (id, name, slug, role, bio, avatar_url, linkedin_url)
+INSERT INTO authors (id, name, slug, role, bio, avatar_url, linkedin_url, github_url)
 VALUES 
 (
     'a1000000-0000-0000-0000-000000000001',
@@ -241,7 +242,8 @@ VALUES
     'Founder & Chief Career Editor',
     'Wahi ur Rehman is a BS Artificial Intelligence student, AI systems builder, and early-career advocate based in Pakistan. Driven by personal frustration with misleading online job listings, unverified stipend claims, and exploitative unpaid internships targeting university undergraduates, Wahi founded PakInternships with an automated verification pipeline. He oversees platform architecture, programmatic verification constraints, and university partnerships to guarantee students transparent, fully-vetted career opportunities.',
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    'https://linkedin.com/in/wahi-ur-rehman'
+    'https://www.linkedin.com/in/wahi-abbasi-563593386',
+    'https://github.com/Wahi-ur-rehman'
 ),
 (
     'a1000000-0000-0000-0000-000000000002',
@@ -250,7 +252,8 @@ VALUES
     'Technical Talent Lead & Campus Recruiter',
     'Ayesha Siddiqui is an engineering talent specialist and campus hiring advisor based in Islamabad. Having coordinated nationwide university drives with premier software consultancies in Islamabad and Lahore, Ayesha directs technical verification for Computer Science, Cloud/DevOps, and Artificial Intelligence opportunities.',
     'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80',
-    'https://linkedin.com/in/ayeshasiddiqui-pk'
+    'https://linkedin.com/in/ayeshasiddiqui-pk',
+    NULL
 ),
 (
     'a1000000-0000-0000-0000-000000000003',
@@ -259,7 +262,8 @@ VALUES
     'Banking, FinTech & Corporate Careers Editor',
     'Zainab Farooq is a corporate career consultant and financial analyst based in Karachi. An alumnus of IBA Karachi, Zainab tracks Management Trainee Officer (MTO) drives and financial internships across commercial banks, asset management firms, and digital payment providers in Pakistan.',
     'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80',
-    'https://linkedin.com/in/zainab-farooq-pk'
+    'https://linkedin.com/in/zainab-farooq-pk',
+    NULL
 ),
 (
     'a1000000-0000-0000-0000-000000000004',
@@ -268,7 +272,8 @@ VALUES
     'Industrial Engineering & PEC Traineeship Mentor',
     'Engr. Muhammad Bilal is a PEC-registered mechanical engineer and industrial operations supervisor in Lahore. He reviews engineering traineeships in manufacturing plants, national energy utilities, automotive assemblers, and renewable power infrastructure across Punjab and Sindh.',
     'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-    'https://linkedin.com/in/muhammad-bilal-engr'
+    'https://linkedin.com/in/muhammad-bilal-engr',
+    NULL
 ),
 (
     'a1000000-0000-0000-0000-000000000005',
@@ -277,7 +282,8 @@ VALUES
     'Creative & People Operations Editor',
     'Fatima Zahra is a product design and talent acquisition specialist based in Lahore. She evaluates creative design, UI/UX, digital marketing, and human resources opportunities, ensuring early-career Pakistani candidates receive genuine project ownership and verified compensation.',
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    'https://linkedin.com/in/fatima-zahra-talent'
+    'https://linkedin.com/in/fatima-zahra-talent',
+    NULL
 ) ON CONFLICT (slug) DO NOTHING;
 
 -- Seed Sample Internship (100% Verified, passes all gate constraints)

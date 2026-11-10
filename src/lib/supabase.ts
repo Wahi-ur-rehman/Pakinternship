@@ -143,7 +143,8 @@ export const SEED_AUTHORS: Author[] = [
     role: 'Founder & Chief Career Editor',
     bio: 'Wahi ur Rehman is a BS Artificial Intelligence student, AI systems builder, and early-career advocate based in Pakistan. Driven by personal frustration with misleading online job listings, unverified stipend claims, and exploitative unpaid internships targeting university undergraduates, Wahi founded PakInternships with an automated verification pipeline. He oversees platform architecture, programmatic verification constraints, and university partnerships to guarantee students transparent, fully-vetted career opportunities.',
     avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    linkedin_url: 'https://linkedin.com/in/wahi-ur-rehman',
+    linkedin_url: 'https://www.linkedin.com/in/wahi-abbasi-563593386',
+    github_url: 'https://github.com/Wahi-ur-rehman',
     created_at: '2026-01-01T00:00:00Z',
   },
   {

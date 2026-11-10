@@ -15,6 +15,7 @@ export interface Author {
   bio: string;
   avatar_url?: string;
   linkedin_url?: string;
+  github_url?: string;
   created_at?: string;
 }
 
