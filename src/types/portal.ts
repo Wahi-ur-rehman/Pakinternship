@@ -18,6 +18,19 @@ export interface Author {
   created_at?: string;
 }
 
+export type NicheCategory =
+  | 'computer-science'
+  | 'engineering'
+  | 'information-technology'
+  | 'business-finance'
+  | 'marketing-sales'
+  | 'design-creative'
+  | 'human-resources'
+  | 'supply-chain'
+  | 'media-communications'
+  | 'healthcare-pharma'
+  | (string & {});
+
 export interface Listing {
   id: string;
   slug: string;
@@ -26,7 +39,7 @@ export interface Listing {
   location: string;
   mode: ListingMode;
   employment_type: EmploymentType;
-  category: 'engineering' | 'computer-science' | 'information-technology';
+  category: NicheCategory;
   
   // Non-negotiable: Never AI-invented numbers!
   stipend: string | null; // NULL renders literal "Not disclosed by the employer"

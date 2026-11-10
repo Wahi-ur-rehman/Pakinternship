@@ -71,7 +71,8 @@ export function runAdSenseAudit(context: AuditContext): AdSenseComplianceCheck[]
   });
 
   // Check 4: No empty or thin indexable URLs
-  const thinCategories = ['engineering', 'computer-science', 'information-technology'].filter((cat) => {
+  const allCategorySlugs = Array.from(new Set(listings.map((l) => l.category)));
+  const thinCategories = allCategorySlugs.filter((cat) => {
     const count = publishedListings.filter((l) => l.category === cat).length;
     return count > 0 && count < 3; // categories under 3 listings get noindex
   });
