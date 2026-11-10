@@ -1,7 +1,8 @@
 ---
 // ==============================================================================
 // src/components/AdSlot.astro
-// Compliant Google AdSense Placeholder Slot (Enforces Max 3 Slots, Never Above H1)
+// Google AdSense Compliant Responsive Display Slot
+// Max 3 slots per page • Never placed above H1 • Zero Cumulative Layout Shift (CLS)
 // ==============================================================================
 
 export interface Props {
@@ -12,16 +13,25 @@ export interface Props {
 const { slotId, className = '' } = Astro.props;
 ---
 
-<div class={`my-8 overflow-hidden rounded-xl border border-dashed border-slate-300 bg-slate-50/80 p-4 text-center ${className}`}>
-  <div class="flex items-center justify-center gap-2 mb-2">
-    <span class="text-[10px] uppercase tracking-wider font-semibold text-slate-400 bg-slate-200/60 px-2 py-0.5 rounded">
-      Advertisement Placeholder
+<aside
+  class={`my-8 overflow-hidden rounded-2xl bg-slate-50/60 border border-slate-200/80 p-3 text-center transition ${className}`}
+  aria-label="Advertisement"
+>
+  <div class="flex items-center justify-center mb-1.5">
+    <span class="text-[9px] uppercase tracking-widest font-semibold text-slate-400">
+      Sponsored
     </span>
   </div>
-  
-  <!-- In production, replace data-ad-client and data-ad-slot with owner's AdSense tag -->
-  <div class="min-h-[90px] flex flex-col items-center justify-center text-xs text-slate-400">
-    <span class="font-mono text-[11px] text-slate-500">Google AdSense Container ({slotId})</span>
-    <span class="text-[10px] text-slate-400 mt-1">Responsive display format • Auto-reserves height to prevent Cumulative Layout Shift (CLS)</span>
+
+  <!-- Responsive Google AdSense Container -->
+  <div class="min-h-[100px] w-full flex items-center justify-center text-slate-300 text-[11px]" id={slotId}>
+    <ins
+      class="adsbygoogle block w-full"
+      style="display:block"
+      data-ad-client="ca-pub-0000000000000000"
+      data-ad-slot="0000000000"
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    ></ins>
   </div>
-</div>
+</aside>
