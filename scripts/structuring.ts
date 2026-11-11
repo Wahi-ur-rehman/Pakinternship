@@ -83,8 +83,14 @@ export function structureStagingRecord(staging: RawStagingItem): Partial<Listing
     'Be ready to discuss the architecture and engineering hurdles of your semester capstone project.'
   ];
 
-  // 10. 150-160 Char Meta Description
-  const meta_description = `Apply for the ${title} at ${company} in Pakistan. Verified stipend: ${stipend || 'Check post'}. Review eligibility and interview tips.`;
+  // 10. 120-155 Char Meta Description (Strictly conforms to VARCHAR(160) and Google SERP)
+  let meta_description = `Apply for ${title} at ${company} in Pakistan. Verified stipend: ${stipend || 'Not disclosed'}. Review eligibility and interview tips.`;
+  if (meta_description.length > 155) {
+    meta_description = meta_description.substring(0, 152).trim() + '...';
+  }
+  while (meta_description.length < 120) {
+    meta_description += ' Review full prerequisites.';
+  }
 
   return {
     slug: baseSlug,
