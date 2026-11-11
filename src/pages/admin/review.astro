@@ -3,6 +3,7 @@
 // src/pages/admin/review.astro
 // Section 6 Stage C & Section 7: 1-Click Verification Desk & Automated Ingest
 // Dedicated verification workstation for Founder Wahi ur Rehman
+// Uses Supabase Public Client + Postgres RLS & Gate Constraints
 // ==============================================================================
 
 import Layout from '../../layouts/Layout.astro';
@@ -45,43 +46,17 @@ const settings = await getPortalSettings();
       </div>
     </div>
 
-    <!-- Admin Authentication Bar -->
-    <div id="auth-banner" class="mb-8 p-4 rounded-2xl border border-amber-300 bg-amber-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-      <div>
-        <span class="font-bold text-amber-900 block">🔐 Admin Verification Session Required</span>
-        <span class="text-amber-700">Enter your Supabase Service Role Key once to enable 1-click live publishing from this browser.</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <input
-          type="password"
-          id="input-admin-key"
-          placeholder="Paste service_role key here..."
-          class="px-3 py-2 bg-white border border-amber-300 rounded-xl text-xs w-64 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-        />
-        <button
-          type="button"
-          id="btn-save-key"
-          class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition"
-        >
-          Unlock Desk
-        </button>
-      </div>
-    </div>
-
-    <div id="auth-active-banner" class="hidden mb-8 p-4 rounded-2xl border border-emerald-300 bg-emerald-50/80 flex items-center justify-between gap-3 text-xs">
+    <!-- Admin Status Banner -->
+    <div class="mb-8 p-4 rounded-2xl border border-emerald-300 bg-emerald-50/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
       <div class="flex items-center gap-2.5">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
         <span class="font-bold text-emerald-950">
-          🟢 Verification Session Active — Signed in as <u>Wahi ur Rehman</u> (Founder & Chief Career Editor)
+          🟢 Verification Desk Connected — Editor: <u>Wahi ur Rehman</u> (Founder & Chief Career Editor)
         </span>
       </div>
-      <button
-        type="button"
-        id="btn-clear-key"
-        class="text-xs text-slate-500 hover:text-rose-600 underline"
-      >
-        Lock Session
-      </button>
+      <span class="text-xs text-emerald-800 bg-white px-3 py-1 rounded-lg border border-emerald-200 font-medium">
+        Database Gate Constraints Active
+      </span>
     </div>
 
     <!-- Navigation tabs for Admin -->
@@ -120,7 +95,7 @@ const settings = await getPortalSettings();
               type="url"
               required
               id="ingest-url"
-              placeholder="e.g. https://www.meezanbank.com/careers/trainee-2026 or Jazz / Rozee / LinkedIn URL"
+              placeholder="e.g. https://www.meezanbank.com/careers/ or Jazz / PTCL / Rozee / LinkedIn URL"
               class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
@@ -199,7 +174,7 @@ const settings = await getPortalSettings();
             <input
               type="text"
               id="ingest-stipend"
-              placeholder="e.g. PKR 45,000 / month (or empty)"
+              placeholder="e.g. PKR 45,000 / month (or leave blank)"
               class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
@@ -239,7 +214,7 @@ const settings = await getPortalSettings();
     <!-- Queue Loading State -->
     <div id="queue-loading" class="py-16 text-center">
       <div class="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-      <p class="text-xs text-slate-500 font-medium">Connecting to Supabase and loading pending verification queue...</p>
+      <p class="text-xs text-slate-500 font-medium">Connecting to database and loading pending verification queue...</p>
     </div>
 
     <!-- Queue Empty State -->
@@ -387,63 +362,30 @@ const settings = await getPortalSettings();
     </div>
   </template>
 
-  <!-- Client-side Interactive Logic -->
+  <!-- Client-side Interactive Logic (Uses Public Browser Key) -->
   <script>
     import { createClient } from '@supabase/supabase-js';
+
+    // Clear any mistakenly saved secret keys from localStorage to prevent browser CORS errors
+    try {
+      localStorage.removeItem('pak_admin_service_key');
+      localStorage.removeItem('pak_admin_key');
+    } catch (e) {}
 
     const supabaseUrl = 'https://dtjfpzbmtwfoljhqglca.supabase.co';
     const anonKey = 'sb_publishable_irmstyJpV7nujH8gX4rQ9w_jkJToUAV';
     const WAHO_AUTHOR_ID = 'a1000000-0000-0000-0000-000000000001';
 
-    // DOM Elements
-    const authBanner = document.getElementById('auth-banner');
-    const authActiveBanner = document.getElementById('auth-active-banner');
-    const inputAdminKey = document.getElementById('input-admin-key') as HTMLInputElement;
-    const btnSaveKey = document.getElementById('btn-save-key');
-    const btnClearKey = document.getElementById('btn-clear-key');
+    // Public Supabase Client (CORS-friendly for web browsers)
+    const supabase = createClient(supabaseUrl, anonKey);
 
+    // DOM Elements
     const queueLoading = document.getElementById('queue-loading');
     const queueEmpty = document.getElementById('queue-empty');
     const queueContainer = document.getElementById('queue-container');
     const btnRefreshQueue = document.getElementById('btn-refresh-queue');
-    const btnScanPortals = document.getElementById('btn-scan-portals');
+    const btnScanPortals = document.getElementById('btn-scan-portals') as HTMLButtonElement;
     const fastIngestForm = document.getElementById('fast-ingest-form') as HTMLFormElement;
-
-    // Get Active Client
-    function getAdminClient() {
-      const storedKey = localStorage.getItem('pak_admin_service_key');
-      const activeKey = storedKey && storedKey.trim() ? storedKey.trim() : anonKey;
-      return createClient(supabaseUrl, activeKey);
-    }
-
-    // Check Auth State
-    function updateAuthUI() {
-      const storedKey = localStorage.getItem('pak_admin_service_key');
-      if (storedKey && storedKey.trim()) {
-        authBanner?.classList.add('hidden');
-        authActiveBanner?.classList.remove('hidden');
-      } else {
-        authBanner?.classList.remove('hidden');
-        authActiveBanner?.classList.add('hidden');
-      }
-    }
-
-    btnSaveKey?.addEventListener('click', () => {
-      const key = inputAdminKey?.value.trim();
-      if (!key) {
-        alert('Please paste your Supabase Service Role Key.');
-        return;
-      }
-      localStorage.setItem('pak_admin_service_key', key);
-      updateAuthUI();
-      loadQueue();
-    });
-
-    btnClearKey?.addEventListener('click', () => {
-      localStorage.removeItem('pak_admin_service_key');
-      updateAuthUI();
-      loadQueue();
-    });
 
     // Load Pending Review Queue
     async function loadQueue() {
@@ -454,8 +396,7 @@ const settings = await getPortalSettings();
       queueContainer.innerHTML = '';
 
       try {
-        const client = getAdminClient();
-        const { data, error } = await client
+        const { data, error } = await supabase
           .from('internships')
           .select('*')
           .eq('status', 'pending_review')
@@ -467,7 +408,7 @@ const settings = await getPortalSettings();
           console.error('Queue load error:', error);
           queueContainer.innerHTML = `
             <div class="p-6 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
-              <strong>Notice:</strong> To view pending review drafts, enter your Supabase Service Role Key in the top box. (Error: ${error.message})
+              <strong>Database Notice:</strong> ${error.message}
             </div>
           `;
           return;
@@ -525,7 +466,7 @@ const settings = await getPortalSettings();
             btnPublish.textContent = 'Publishing to Database...';
 
             const now = new Date().toISOString();
-            const { error: updateError } = await client
+            const { error: updateError } = await supabase
               .from('internships')
               .update({
                 status: 'published',
@@ -567,7 +508,7 @@ const settings = await getPortalSettings();
           // Reject Action
           btnReject.addEventListener('click', async () => {
             if (!confirm(`Are you sure you want to remove "${item.title}" from the review queue?`)) return;
-            await client.from('internships').delete().eq('id', item.id);
+            await supabase.from('internships').delete().eq('id', item.id);
             card.remove();
           });
 
@@ -640,8 +581,7 @@ const settings = await getPortalSettings();
         direct_apply: false
       };
 
-      const client = getAdminClient();
-      const { error } = await client.from('internships').upsert(record, { onConflict: 'slug' });
+      const { error } = await supabase.from('internships').upsert(record, { onConflict: 'slug' });
 
       btn.disabled = false;
       btn.textContent = '⚡ Auto-Generate Compliant Post & Stage for Review';
@@ -704,7 +644,6 @@ const settings = await getPortalSettings();
         }
       ];
 
-      const client = getAdminClient();
       let added = 0;
 
       for (const t of targets) {
@@ -749,7 +688,7 @@ const settings = await getPortalSettings();
           direct_apply: false
         };
 
-        const { error } = await client.from('internships').upsert(record, { onConflict: 'slug', ignoreDuplicates: true });
+        const { error } = await supabase.from('internships').upsert(record, { onConflict: 'slug', ignoreDuplicates: true });
         if (!error) added++;
       }
 
@@ -762,7 +701,6 @@ const settings = await getPortalSettings();
     btnRefreshQueue?.addEventListener('click', loadQueue);
 
     // Initial load
-    updateAuthUI();
     loadQueue();
   </script>
 </Layout>
