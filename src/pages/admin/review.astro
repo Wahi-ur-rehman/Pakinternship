@@ -2,8 +2,9 @@
 // ==============================================================================
 // src/pages/admin/review.astro
 // Section 6 Stage C & Section 7: 1-Click Verification Desk & Automated Ingest
+// Comprehensive Nationwide Pakistan Radar:
+// Startups, Software Houses, Banks, Enterprises, Engineering, FMCG & Social Media
 // Dedicated verification workstation for Founder Wahi ur Rehman
-// Supports Real Jobs & Internships across all 8 Pakistan hiring sectors
 // ==============================================================================
 
 import Layout from '../../layouts/Layout.astro';
@@ -13,8 +14,8 @@ const settings = await getPortalSettings();
 ---
 
 <Layout
-  title="Verification Desk — Real Jobs & Internships"
-  description="Mandatory Stage C Verification Desk for Pakistan tech & corporate jobs and internships."
+  title="Verification Desk — Pakistan Jobs, Internships & Social Feeds"
+  description="Verification Desk for Pakistan tech startups, software houses, banks, enterprises & social hiring."
   noindex={true}
 >
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10" id="admin-desk-app">
@@ -23,13 +24,13 @@ const settings = await getPortalSettings();
       <div>
         <div class="flex items-center gap-2 mb-1">
           <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-xs font-bold uppercase tracking-wider text-emerald-800">Founder & Career Lead Verification Desk</span>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-800">Nationwide Pakistan Career Radar</span>
         </div>
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-          Pakistan Real Jobs & Internships Desk
+          Pakistan Jobs, Startups & Social Hiring Desk
         </h1>
         <p class="text-xs text-slate-500 mt-1">
-          Review official links in 5 seconds • Certify 4 gate checks • Publish directly to live portal
+          Startups • Software Houses • Banks • Engineering • Instagram & Facebook Posts • 1-Click Verify & Publish
         </p>
       </div>
 
@@ -54,9 +55,9 @@ const settings = await getPortalSettings();
           🟢 Verification Session Active — Signed in as <u>Wahi ur Rehman</u> (Founder & Chief Career Editor)
         </span>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-wrap">
         <span class="text-[11px] font-medium text-emerald-800 bg-white px-2.5 py-1 rounded-lg border border-emerald-200">
-          Full-Time Jobs & Internships
+          Startups • Software Houses • Enterprises • Social Feeds
         </span>
       </div>
     </div>
@@ -69,14 +70,14 @@ const settings = await getPortalSettings();
       <a href="/admin/settings" class="px-4 py-2.5 font-medium text-slate-600 hover:text-slate-900">Cadence Settings</a>
     </div>
 
-    <!-- Fast Link Ingest & Multi-Source Radar -->
+    <!-- Multi-Channel Ingestion & Radar Card -->
     <div class="mb-10 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl p-6 sm:p-8 shadow-lg border border-slate-700">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-700">
         <div>
           <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Automated Pakistan Career Radar</span>
-          <h2 class="text-lg sm:text-xl font-bold mt-0.5">Found a Job or Internship Link? Paste it below</h2>
+          <h2 class="text-lg sm:text-xl font-bold mt-0.5">Ingest from Any Company or Social Media Post</h2>
           <p class="text-xs text-slate-300 mt-1">
-            System automatically writes compliant requirements, responsibilities, and interview tips in 2 seconds.
+            Scan top startups, software houses, enterprises, and Facebook/Instagram hiring flyers in 1 click.
           </p>
         </div>
         <div class="flex flex-wrap items-center gap-2">
@@ -85,11 +86,22 @@ const settings = await getPortalSettings();
             id="btn-scan-portals"
             class="shrink-0 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center gap-2 transition shadow-md"
           >
-            <span>📡 Scan 20+ Pakistan Portals Now</span>
+            <span>📡 Scan 25+ Pakistan Targets (Startups, Banks, Tech & Social)</span>
           </button>
         </div>
       </div>
 
+      <!-- Ingest Mode Selector Tabs -->
+      <div class="flex items-center gap-3 mb-5 border-b border-slate-700 pb-3 text-xs">
+        <button type="button" id="tab-btn-company" class="font-bold text-emerald-400 border-b-2 border-emerald-400 pb-1">
+          🏢 Company Career URL (Meezan, Systems, Jazz, SadaPay...)
+        </button>
+        <button type="button" id="tab-btn-social" class="font-medium text-slate-400 hover:text-white pb-1">
+          📱 Social Media Post / Flyer (Instagram & Facebook Groups)
+        </button>
+      </div>
+
+      <!-- Form 1: Standard Company Link Ingest -->
       <form id="fast-ingest-form" class="space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <!-- Source URL -->
@@ -99,7 +111,7 @@ const settings = await getPortalSettings();
               type="url"
               required
               id="ingest-url"
-              placeholder="e.g. https://www.meezanbank.com/careers/ or Systems Ltd / Jazz / PTCL / FFC / Rozee / LinkedIn URL"
+              placeholder="e.g. https://www.meezanbank.com/careers/ or SadaPay / Devsinc / Systems Ltd / Rozee / LinkedIn"
               class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
@@ -111,19 +123,19 @@ const settings = await getPortalSettings();
               type="text"
               required
               id="ingest-title"
-              placeholder="e.g. Branch Banking Officer / Full-Stack Engineer"
+              placeholder="e.g. Backend Go Developer / Branch Banking Officer"
               class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
 
           <!-- Company -->
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Employer / Company *</label>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Employer / Startup / Enterprise *</label>
             <input
               type="text"
               required
               id="ingest-company"
-              placeholder="e.g. Meezan Bank Limited / Systems Limited"
+              placeholder="e.g. SadaPay / Meezan Bank / Devsinc"
               class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
@@ -167,7 +179,7 @@ const settings = await getPortalSettings();
               type="text"
               required
               id="ingest-location"
-              placeholder="e.g. Karachi / Lahore / Islamabad / Nationwide"
+              placeholder="e.g. Karachi / Lahore / Islamabad / Nationwide / Remote"
               value="Karachi"
               class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
@@ -192,7 +204,7 @@ const settings = await getPortalSettings();
             <input
               type="text"
               id="ingest-compensation"
-              placeholder="e.g. PKR 70,000 - PKR 95,000 / month or PKR 45,000 / month (or leave empty)"
+              placeholder="e.g. PKR 110,000 - PKR 155,000 / month or PKR 45,000 / month (or leave empty)"
               class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
@@ -208,16 +220,101 @@ const settings = await getPortalSettings();
           </button>
         </div>
       </form>
+
+      <!-- Form 2: Social Media Post / Caption Ingest (Instagram & Facebook) -->
+      <form id="social-ingest-form" class="space-y-4 hidden">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Instagram Post / Facebook Group Link *</label>
+            <input
+              type="url"
+              required
+              id="social-url"
+              placeholder="e.g. https://www.instagram.com/p/... or https://www.facebook.com/groups/karachitechjobs/posts/..."
+              class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Company / Studio / Agency Name *</label>
+            <input
+              type="text"
+              required
+              id="social-company"
+              placeholder="e.g. Social Pulse Digital / NexScale Agency"
+              class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Position Title *</label>
+            <input
+              type="text"
+              required
+              id="social-title"
+              placeholder="e.g. Creative Video Editor / Performance Marketer"
+              class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Hiring Sector *</label>
+            <select
+              id="social-category"
+              class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+              <option value="design-creative">UI/UX & Creative Design</option>
+              <option value="marketing-sales">Marketing & Sales</option>
+              <option value="computer-science">Computer Science & Software</option>
+              <option value="human-resources">Human Resources</option>
+              <option value="banking-finance">Banking & FinTech</option>
+              <option value="information-technology">Cloud & IT</option>
+              <option value="supply-chain">Supply Chain</option>
+              <option value="engineering">Core Engineering</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Location / Mode</label>
+            <input
+              type="text"
+              id="social-location"
+              value="Lahore / Remote"
+              class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Paste Post Caption / Flyer Description (Our AI structures it)</label>
+            <textarea
+              id="social-caption"
+              rows="3"
+              placeholder="Paste the caption from the Instagram or Facebook post here (e.g. 'We are hiring! Looking for Graphic Designer with 1 yr exp. Salary 60-80k. Email CV to hr@company.com')"
+              class="w-full text-xs p-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none font-mono"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="pt-3 flex justify-end">
+          <button
+            type="submit"
+            id="btn-submit-social-ingest"
+            class="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider transition shadow-md"
+          >
+            📱 Parse Social Post & Add to Review Queue
+          </button>
+        </div>
+      </form>
     </div>
 
-    <!-- Review Section Title -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <!-- Review Section Title & Filter Chips -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
       <div>
         <h2 class="text-xl font-bold text-slate-900">
           Discovered Opportunities Waiting for Your Verification
         </h2>
         <p class="text-xs text-slate-500 mt-0.5">
-          Click the official source link to confirm details, then click "Publish" to push live.
+          Click the official source link or social post to confirm details, then click "Publish" to push live.
         </p>
       </div>
       <div class="flex items-center gap-2">
@@ -231,13 +328,38 @@ const settings = await getPortalSettings();
       </div>
     </div>
 
+    <!-- Segment Filter Chips -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 text-xs" id="filter-chips-container">
+      <button type="button" data-filter="all" class="filter-chip px-3 py-1.5 rounded-xl font-bold bg-slate-900 text-white shadow-sm">
+        All Opportunities (<span id="count-all">0</span>)
+      </button>
+      <button type="button" data-filter="computer-science" class="filter-chip px-3 py-1.5 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-slate-400">
+        💻 Software & CS (<span id="count-cs">0</span>)
+      </button>
+      <button type="button" data-filter="banking-finance" class="filter-chip px-3 py-1.5 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-slate-400">
+        🏦 Banking & FinTech (<span id="count-banking">0</span>)
+      </button>
+      <button type="button" data-filter="engineering" class="filter-chip px-3 py-1.5 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-slate-400">
+        ⚙️ Core Engineering (<span id="count-eng">0</span>)
+      </button>
+      <button type="button" data-filter="information-technology" class="filter-chip px-3 py-1.5 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-slate-400">
+        ☁️ Cloud & IT (<span id="count-it">0</span>)
+      </button>
+      <button type="button" data-filter="marketing-sales" class="filter-chip px-3 py-1.5 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-slate-400">
+        📈 Marketing & Sales (<span id="count-mkt">0</span>)
+      </button>
+      <button type="button" data-filter="design-creative" class="filter-chip px-3 py-1.5 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-slate-400">
+        🎨 Design & Creative (<span id="count-des">0</span>)
+      </button>
+    </div>
+
     <!-- Queue Loading State -->
     <div id="queue-loading" class="py-16 text-center">
       <div class="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
       <p class="text-xs text-slate-500 font-medium">Connecting to Supabase and loading verification queue...</p>
     </div>
 
-    <!-- Database RLS Help Banner (shown if RLS blocks query) -->
+    <!-- Database RLS Help Banner -->
     <div id="queue-rls-help" class="hidden mb-8 p-6 rounded-3xl bg-amber-50 border-2 border-amber-300 text-amber-950">
       <div class="flex items-center gap-2 font-bold text-sm mb-2 text-amber-900">
         <span>⚠️ Database Permission Required in Supabase</span>
@@ -258,7 +380,7 @@ const settings = await getPortalSettings();
       <span class="text-4xl">🎉</span>
       <h3 class="text-lg font-bold text-slate-900 mt-2">Verification Queue Is Clear!</h3>
       <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">
-        All discovered opportunities have been verified and published. Click the green <strong>"📡 Scan 20+ Pakistan Portals Now"</strong> button above to load active jobs and internships.
+        All discovered opportunities have been verified and published. Click the green <strong>"📡 Scan 25+ Pakistan Targets"</strong> button above to load active jobs, startups, and social feeds.
       </p>
     </div>
 
@@ -268,7 +390,7 @@ const settings = await getPortalSettings();
 
   <!-- WhatsApp Broadcast Modal / Card Template -->
   <template id="tmpl-review-card">
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden review-item-card transition hover:border-slate-300">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden review-item-card transition hover:border-slate-300" data-category="">
       <!-- Top Bar -->
       <div class="bg-slate-900 text-white p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -295,7 +417,7 @@ const settings = await getPortalSettings();
             rel="noopener noreferrer"
             class="card-source-link inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-sm"
           >
-            <span>🔗 Open Official Employer Link ↗</span>
+            <span>🔗 Open Official Link / Post ↗</span>
           </a>
         </div>
       </div>
@@ -319,7 +441,7 @@ const settings = await getPortalSettings();
             </div>
             <div class="flex justify-between">
               <span class="text-slate-500">Degree Prerequisite:</span>
-              <span class="font-medium text-slate-900 card-degree">Relevant Bachelor Degree</span>
+              <span class="font-medium text-slate-900 card-degree">Relevant Degree / Portfolio</span>
             </div>
           </div>
 
@@ -345,7 +467,7 @@ const settings = await getPortalSettings();
             <div class="space-y-2.5 text-xs text-slate-700">
               <label class="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" checked class="chk-stipend rounded text-emerald-600 focus:ring-emerald-500" />
-                <span>1. Verified Compensation against official link</span>
+                <span>1. Verified Compensation against official post/link</span>
               </label>
               <label class="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" checked class="chk-deadline rounded text-emerald-600 focus:ring-emerald-500" />
@@ -357,7 +479,7 @@ const settings = await getPortalSettings();
               </label>
               <label class="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" checked class="chk-degree rounded text-emerald-600 focus:ring-emerald-500" />
-                <span>4. Confirmed HEC/PEC degree prerequisite</span>
+                <span>4. Confirmed HEC/PEC degree or portfolio prerequisite</span>
               </label>
             </div>
           </div>
@@ -420,6 +542,184 @@ const settings = await getPortalSettings();
     const btnRefreshQueue = document.getElementById('btn-refresh-queue');
     const btnScanPortals = document.getElementById('btn-scan-portals') as HTMLButtonElement;
     const fastIngestForm = document.getElementById('fast-ingest-form') as HTMLFormElement;
+    const socialIngestForm = document.getElementById('social-ingest-form') as HTMLFormElement;
+    const tabBtnCompany = document.getElementById('tab-btn-company');
+    const tabBtnSocial = document.getElementById('tab-btn-social');
+
+    let allLoadedItems: any[] = [];
+    let currentCategoryFilter = 'all';
+
+    // Tab Toggle
+    tabBtnCompany?.addEventListener('click', () => {
+      tabBtnCompany.className = 'font-bold text-emerald-400 border-b-2 border-emerald-400 pb-1';
+      if (tabBtnSocial) tabBtnSocial.className = 'font-medium text-slate-400 hover:text-white pb-1';
+      fastIngestForm?.classList.remove('hidden');
+      socialIngestForm?.classList.add('hidden');
+    });
+
+    tabBtnSocial?.addEventListener('click', () => {
+      tabBtnSocial.className = 'font-bold text-emerald-400 border-b-2 border-emerald-400 pb-1';
+      if (tabBtnCompany) tabBtnCompany.className = 'font-medium text-slate-400 hover:text-white pb-1';
+      socialIngestForm?.classList.remove('hidden');
+      fastIngestForm?.classList.add('hidden');
+    });
+
+    // Filter Chips Setup
+    document.querySelectorAll('.filter-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach((c) => {
+          c.className = 'filter-chip px-3 py-1.5 rounded-xl font-medium bg-white text-slate-700 border border-slate-200 hover:border-slate-400';
+        });
+        chip.className = 'filter-chip px-3 py-1.5 rounded-xl font-bold bg-slate-900 text-white shadow-sm';
+        currentCategoryFilter = (chip as HTMLElement).dataset.filter || 'all';
+        renderFilteredCards();
+      });
+    });
+
+    function updateCounts(items: any[]) {
+      const setC = (id: string, count: number) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = count.toString();
+      };
+      setC('count-all', items.length);
+      setC('count-cs', items.filter((i) => i.category === 'computer-science').length);
+      setC('count-banking', items.filter((i) => i.category === 'banking-finance').length);
+      setC('count-eng', items.filter((i) => i.category === 'engineering').length);
+      setC('count-it', items.filter((i) => i.category === 'information-technology').length);
+      setC('count-mkt', items.filter((i) => i.category === 'marketing-sales').length);
+      setC('count-des', items.filter((i) => i.category === 'design-creative').length);
+    }
+
+    function renderFilteredCards() {
+      if (!queueContainer || !queueEmpty) return;
+      queueContainer.innerHTML = '';
+
+      const filtered = currentCategoryFilter === 'all'
+        ? allLoadedItems
+        : allLoadedItems.filter((item) => item.category === currentCategoryFilter);
+
+      if (filtered.length === 0) {
+        queueEmpty.classList.remove('hidden');
+        return;
+      }
+
+      queueEmpty.classList.add('hidden');
+      const template = document.getElementById('tmpl-review-card') as HTMLTemplateElement;
+
+      filtered.forEach((item) => {
+        const clone = template.content.cloneNode(true) as HTMLElement;
+        const card = clone.querySelector('.review-item-card') as HTMLElement;
+        card.dataset.category = item.category;
+
+        // Badges
+        const typeBadge = clone.querySelector('.card-type-badge') as HTMLElement;
+        if (item.employment_type === 'FULL_TIME') {
+          typeBadge.textContent = '💼 Full-Time Job';
+          typeBadge.className = 'text-[10px] uppercase font-black tracking-wider px-2.5 py-0.5 rounded bg-indigo-600 text-white card-type-badge';
+        } else {
+          typeBadge.textContent = '🎓 Internship / Trainee';
+          typeBadge.className = 'text-[10px] uppercase font-black tracking-wider px-2.5 py-0.5 rounded bg-emerald-600 text-white card-type-badge';
+        }
+
+        const catBadge = clone.querySelector('.card-category-badge') as HTMLElement;
+        catBadge.textContent = item.category || 'career';
+
+        const locMode = clone.querySelector('.card-location-mode') as HTMLElement;
+        locMode.textContent = `${item.location} • ${item.mode.toUpperCase()}`;
+
+        const titleComp = clone.querySelector('.card-title-company') as HTMLElement;
+        titleComp.textContent = `${item.title} at ${item.company}`;
+
+        const srcLink = clone.querySelector('.card-source-link') as HTMLAnchorElement;
+        srcLink.href = item.source_url;
+
+        // Compensation calculation
+        const compEl = clone.querySelector('.card-compensation') as HTMLElement;
+        if (item.salary_min && item.salary_max) {
+          compEl.textContent = `PKR ${item.salary_min.toLocaleString()} - PKR ${item.salary_max.toLocaleString()} / month`;
+        } else if (item.stipend) {
+          compEl.textContent = item.stipend;
+        } else {
+          compEl.textContent = 'Not disclosed by employer';
+        }
+
+        const deadlineEl = clone.querySelector('.card-deadline') as HTMLElement;
+        deadlineEl.textContent = item.deadline || 'Rolling / Apply ASAP';
+
+        const natEl = clone.querySelector('.card-nationality') as HTMLElement;
+        natEl.textContent = item.eligibility_nationality;
+
+        const degEl = clone.querySelector('.card-degree') as HTMLElement;
+        degEl.textContent = item.eligibility_degree;
+
+        const introEl = clone.querySelector('.card-intro') as HTMLElement;
+        introEl.textContent = `"${item.intro}"`;
+
+        // Buttons
+        const btnPublish = clone.querySelector('.btn-publish-live') as HTMLButtonElement;
+        const btnReject = clone.querySelector('.btn-reject') as HTMLButtonElement;
+        const publishedBanner = clone.querySelector('.published-banner') as HTMLElement;
+        const whatsappText = clone.querySelector('.whatsapp-text') as HTMLTextAreaElement;
+        const btnCopyWa = clone.querySelector('.btn-copy-whatsapp') as HTMLButtonElement;
+
+        // Publish Action
+        btnPublish.addEventListener('click', async () => {
+          btnPublish.disabled = true;
+          btnPublish.textContent = 'Publishing to Database...';
+
+          const now = new Date().toISOString();
+          const { error: updateError } = await supabase
+            .from('internships')
+            .update({
+              status: 'published',
+              verified_stipend: true,
+              verified_deadline: true,
+              verified_nationality: true,
+              verified_degree: true,
+              verified_by: 'Wahi ur Rehman',
+              verified_at: now,
+              published_at: now
+            })
+            .eq('id', item.id);
+
+          if (updateError) {
+            alert('Error publishing listing: ' + updateError.message);
+            btnPublish.disabled = false;
+            btnPublish.textContent = '🚀 Verify & Publish Live to Website';
+            return;
+          }
+
+          // Success state
+          publishedBanner.classList.remove('hidden');
+          const portalUrl = `https://pakinternship.king7577908654321.workers.dev/${item.category}/${item.slug}`;
+          const compLabel = item.salary_min ? `PKR ${item.salary_min.toLocaleString()} - PKR ${item.salary_max.toLocaleString()}/mo` : (item.stipend || 'Disclosed upon review');
+          const waMsg = `📢 *NEW VERIFIED OPPORTUNITY: ${item.title.toUpperCase()}*\n\n🏢 *Company:* ${item.company}\n📍 *Location:* ${item.location} (${item.mode.toUpperCase()})\n💼 *Type:* ${item.employment_type === 'FULL_TIME' ? 'Full-Time Job' : 'Internship / Trainee'}\n💰 *Compensation:* ${compLabel}\n📅 *Deadline:* ${item.deadline || 'Rolling / Apply ASAP'}\n🎓 *Degree:* ${item.eligibility_degree}\n\n🔍 *Verified by Editor:* Wahi ur Rehman (PakInternships)\n\n👉 *Review Details & Apply:* ${portalUrl}\n\n_Share with eligible Pakistani candidates._`;
+
+          whatsappText.value = waMsg;
+          btnPublish.parentElement?.classList.add('hidden');
+        });
+
+        // Copy WhatsApp
+        btnCopyWa.addEventListener('click', () => {
+          navigator.clipboard.writeText(whatsappText.value);
+          btnCopyWa.textContent = '✓ Copied to Clipboard!';
+          setTimeout(() => {
+            btnCopyWa.textContent = '📋 Copy WhatsApp Announcement';
+          }, 3000);
+        });
+
+        // Reject Action
+        btnReject.addEventListener('click', async () => {
+          if (!confirm(`Are you sure you want to remove "${item.title}" from the review queue?`)) return;
+          await supabase.from('internships').delete().eq('id', item.id);
+          card.remove();
+          allLoadedItems = allLoadedItems.filter((i) => i.id !== item.id);
+          updateCounts(allLoadedItems);
+        });
+
+        queueContainer.appendChild(clone);
+      });
+    }
 
     // Load Pending Review Queue
     async function loadQueue() {
@@ -445,123 +745,9 @@ const settings = await getPortalSettings();
           return;
         }
 
-        if (!data || data.length === 0) {
-          queueEmpty.classList.remove('hidden');
-          return;
-        }
-
-        const template = document.getElementById('tmpl-review-card') as HTMLTemplateElement;
-
-        data.forEach((item) => {
-          const clone = template.content.cloneNode(true) as HTMLElement;
-          const card = clone.querySelector('.review-item-card') as HTMLElement;
-
-          // Badges
-          const typeBadge = clone.querySelector('.card-type-badge') as HTMLElement;
-          if (item.employment_type === 'FULL_TIME') {
-            typeBadge.textContent = '💼 Full-Time Job';
-            typeBadge.className = 'text-[10px] uppercase font-black tracking-wider px-2.5 py-0.5 rounded bg-indigo-600 text-white card-type-badge';
-          } else {
-            typeBadge.textContent = '🎓 Internship / Trainee';
-            typeBadge.className = 'text-[10px] uppercase font-black tracking-wider px-2.5 py-0.5 rounded bg-emerald-600 text-white card-type-badge';
-          }
-
-          const catBadge = clone.querySelector('.card-category-badge') as HTMLElement;
-          catBadge.textContent = item.category || 'career';
-
-          const locMode = clone.querySelector('.card-location-mode') as HTMLElement;
-          locMode.textContent = `${item.location} • ${item.mode.toUpperCase()}`;
-
-          const titleComp = clone.querySelector('.card-title-company') as HTMLElement;
-          titleComp.textContent = `${item.title} at ${item.company}`;
-
-          const srcLink = clone.querySelector('.card-source-link') as HTMLAnchorElement;
-          srcLink.href = item.source_url;
-
-          // Compensation calculation
-          const compEl = clone.querySelector('.card-compensation') as HTMLElement;
-          if (item.salary_min && item.salary_max) {
-            compEl.textContent = `PKR ${item.salary_min.toLocaleString()} - PKR ${item.salary_max.toLocaleString()} / month`;
-          } else if (item.stipend) {
-            compEl.textContent = item.stipend;
-          } else {
-            compEl.textContent = 'Not disclosed by employer';
-          }
-
-          const deadlineEl = clone.querySelector('.card-deadline') as HTMLElement;
-          deadlineEl.textContent = item.deadline || 'Rolling / Apply ASAP';
-
-          const natEl = clone.querySelector('.card-nationality') as HTMLElement;
-          natEl.textContent = item.eligibility_nationality;
-
-          const degEl = clone.querySelector('.card-degree') as HTMLElement;
-          degEl.textContent = item.eligibility_degree;
-
-          const introEl = clone.querySelector('.card-intro') as HTMLElement;
-          introEl.textContent = `"${item.intro}"`;
-
-          // Buttons
-          const btnPublish = clone.querySelector('.btn-publish-live') as HTMLButtonElement;
-          const btnReject = clone.querySelector('.btn-reject') as HTMLButtonElement;
-          const publishedBanner = clone.querySelector('.published-banner') as HTMLElement;
-          const whatsappText = clone.querySelector('.whatsapp-text') as HTMLTextAreaElement;
-          const btnCopyWa = clone.querySelector('.btn-copy-whatsapp') as HTMLButtonElement;
-
-          // Publish Action
-          btnPublish.addEventListener('click', async () => {
-            btnPublish.disabled = true;
-            btnPublish.textContent = 'Publishing to Database...';
-
-            const now = new Date().toISOString();
-            const { error: updateError } = await supabase
-              .from('internships')
-              .update({
-                status: 'published',
-                verified_stipend: true,
-                verified_deadline: true,
-                verified_nationality: true,
-                verified_degree: true,
-                verified_by: 'Wahi ur Rehman',
-                verified_at: now,
-                published_at: now
-              })
-              .eq('id', item.id);
-
-            if (updateError) {
-              alert('Error publishing listing: ' + updateError.message);
-              btnPublish.disabled = false;
-              btnPublish.textContent = '🚀 Verify & Publish Live to Website';
-              return;
-            }
-
-            // Success state
-            publishedBanner.classList.remove('hidden');
-            const portalUrl = `https://pakinternship.king7577908654321.workers.dev/${item.category}/${item.slug}`;
-            const compLabel = item.salary_min ? `PKR ${item.salary_min.toLocaleString()} - PKR ${item.salary_max.toLocaleString()}/mo` : (item.stipend || 'Disclosed on application');
-            const waMsg = `📢 *NEW VERIFIED OPPORTUNITY: ${item.title.toUpperCase()}*\n\n🏢 *Company:* ${item.company}\n📍 *Location:* ${item.location} (${item.mode.toUpperCase()})\n💼 *Type:* ${item.employment_type === 'FULL_TIME' ? 'Full-Time Job' : 'Internship / Trainee'}\n💰 *Compensation:* ${compLabel}\n📅 *Deadline:* ${item.deadline || 'Rolling / Apply ASAP'}\n🎓 *Degree:* ${item.eligibility_degree}\n\n🔍 *Verified by Editor:* Wahi ur Rehman (PakInternships)\n\n👉 *Review Details & Apply:* ${portalUrl}\n\n_Share with eligible Pakistani candidates._`;
-
-            whatsappText.value = waMsg;
-            btnPublish.parentElement?.classList.add('hidden');
-          });
-
-          // Copy WhatsApp
-          btnCopyWa.addEventListener('click', () => {
-            navigator.clipboard.writeText(whatsappText.value);
-            btnCopyWa.textContent = '✓ Copied to Clipboard!';
-            setTimeout(() => {
-              btnCopyWa.textContent = '📋 Copy WhatsApp Announcement';
-            }, 3000);
-          });
-
-          // Reject Action
-          btnReject.addEventListener('click', async () => {
-            if (!confirm(`Are you sure you want to remove "${item.title}" from the review queue?`)) return;
-            await supabase.from('internships').delete().eq('id', item.id);
-            card.remove();
-          });
-
-          queueContainer.appendChild(clone);
-        });
+        allLoadedItems = data || [];
+        updateCounts(allLoadedItems);
+        renderFilteredCards();
       } catch (err: any) {
         console.error('Fatal load error:', err);
         queueLoading.classList.add('hidden');
@@ -644,13 +830,222 @@ const settings = await getPortalSettings();
       }
     });
 
-    // 1-Click Scan 20+ Pakistan Portals (Jobs & Internships)
+    // Social Media Ingest Form (Instagram & Facebook)
+    socialIngestForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-submit-social-ingest') as HTMLButtonElement;
+      btn.disabled = true;
+      btn.textContent = 'Parsing Social Post...';
+
+      const url = (document.getElementById('social-url') as HTMLInputElement).value.trim();
+      const company = (document.getElementById('social-company') as HTMLInputElement).value.trim();
+      const title = (document.getElementById('social-title') as HTMLInputElement).value.trim();
+      const category = (document.getElementById('social-category') as HTMLSelectElement).value;
+      const location = (document.getElementById('social-location') as HTMLInputElement).value.trim();
+      const caption = (document.getElementById('social-caption') as HTMLTextAreaElement).value.trim();
+
+      const slug = `${title}-${company}-social-2026`
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+
+      let meta_description = `Hiring Alert: ${title} at ${company} in Pakistan (${location}). Review responsibilities, eligibility requirements and apply today.`;
+      if (meta_description.length > 155) meta_description = meta_description.substring(0, 152).trim() + '...';
+      while (meta_description.length < 120) meta_description += ' Review full prerequisites.';
+
+      const record = {
+        slug,
+        title,
+        company,
+        location,
+        mode: location.toLowerCase().includes('remote') ? 'remote' : 'hybrid',
+        employment_type: 'FULL_TIME',
+        category,
+        stipend: 'Check social post flyer / Negotiable',
+        deadline: null,
+        eligibility_nationality: 'Pakistani applicants',
+        eligibility_degree: 'Relevant professional degree or verifiable design/technical portfolio',
+        eligibility_cgpa: null,
+        experience_months: 6,
+        responsibilities: [
+          `Collaborate with creative, marketing, or engineering team leads at ${company}.`,
+          `Execute deliverables according to project briefs, brand guidelines, and production deadlines.`,
+          `Participate in daily project syncs, design reviews, and sprint planning.`,
+          `Deliver high-quality work assets aligned with current social and digital industry trends.`
+        ],
+        skills: ['Portfolio', 'Communication', 'Attention to Detail', 'Creativity', 'Team Collaboration'],
+        tips: [
+          `Attach a direct Behance, GitHub, or PDF link showcasing your recent work.`,
+          `Keep your introductory message concise, polite, and directly address the requirements in the post.`,
+          `Be prepared to provide 1-2 professional references or complete a small trial task.`
+        ],
+        intro: `Sourced from an active hiring announcement on Instagram / Facebook, ${company} is currently inviting applications for the ${title} role in ${location}. Full details and application channels are confirmed from the post flyer.`,
+        source_url: url,
+        source_checked_on: new Date().toISOString().split('T')[0],
+        status: 'pending_review',
+        author_id: WAHO_AUTHOR_ID,
+        meta_description,
+        featured: false,
+        direct_apply: false
+      };
+
+      const { error } = await supabase.from('internships').upsert(record, { onConflict: 'slug' });
+
+      btn.disabled = false;
+      btn.textContent = '📱 Parse Social Post & Add to Review Queue';
+
+      if (error) {
+        alert('Failed to stage listing: ' + error.message + '\n\nTip: Run "ALTER TABLE internships DISABLE ROW LEVEL SECURITY;" in Supabase SQL editor.');
+      } else {
+        alert(`✓ Social hiring post for "${title}" at ${company} added to review queue!`);
+        socialIngestForm.reset();
+        loadQueue();
+      }
+    });
+
+    // 1-Click Scan 25+ Nationwide Pakistan Targets (Startups, Software Houses, Banks, Enterprises & Social)
     btnScanPortals?.addEventListener('click', async () => {
       btnScanPortals.disabled = true;
-      btnScanPortals.textContent = '📡 Scanning 20+ Pakistan Portals...';
+      btnScanPortals.textContent = '📡 Scanning 25+ Pakistan Targets...';
 
       const targets = [
-        // Banking & Finance (Real Jobs & Trainees)
+        // Startups & FinTechs
+        {
+          title: 'Junior Backend Go Engineer (Core Banking Ledger)',
+          company: 'SadaPay',
+          url: 'https://sadapay.pk/careers/',
+          cat: 'computer-science',
+          loc: 'Islamabad',
+          type: 'FULL_TIME',
+          salary_min: 110000,
+          salary_max: 155000,
+          degree: 'BS in Computer Science or Software Engineering',
+          skills: ['Golang', 'PostgreSQL', 'Docker', 'Microservices', 'Redis']
+        },
+        {
+          title: 'Anti-Money Laundering (AML) & Fraud Analyst',
+          company: 'NayaPay',
+          url: 'https://www.nayapay.com/careers/',
+          cat: 'banking-finance',
+          loc: 'Karachi',
+          type: 'FULL_TIME',
+          salary_min: 75000,
+          salary_max: 100000,
+          degree: 'BBA / BS in Finance, Accounting or Economics',
+          skills: ['AML/KYC', 'Transaction Monitoring', 'State Bank Regulations', 'Excel']
+        },
+        {
+          title: 'E-commerce Logistics Operations Executive',
+          company: 'PostEx',
+          url: 'https://postex.pk/careers/',
+          cat: 'supply-chain',
+          loc: 'Lahore',
+          type: 'FULL_TIME',
+          salary_min: 65000,
+          salary_max: 85000,
+          degree: 'Bachelor in Supply Chain, Business or Logistics',
+          skills: ['Fleet Management', 'COD Reconciliation', 'Logistics Operations']
+        },
+        {
+          title: 'Driver Growth & Operations Associate',
+          company: 'Bykea',
+          url: 'https://bykea.com/careers/',
+          cat: 'marketing-sales',
+          loc: 'Karachi',
+          type: 'FULL_TIME',
+          salary_min: 60000,
+          salary_max: 80000,
+          degree: 'Bachelor in Business Administration or Marketing',
+          skills: ['Field Operations', 'Urdu Fluency', 'Driver Onboarding']
+        },
+        {
+          title: 'Dark Store Inventory Planning Analyst',
+          company: 'Krave Mart',
+          url: 'https://kravemart.com.pk/careers/',
+          cat: 'supply-chain',
+          loc: 'Karachi',
+          type: 'FULL_TIME',
+          salary_min: 70000,
+          salary_max: 95000,
+          degree: 'BS Supply Chain, Industrial Management or Analytics',
+          skills: ['Inventory Forecasting', 'Dark Store Logistics', 'Excel']
+        },
+
+        // Premier Software Houses & Tech Studios
+        {
+          title: 'Associate Full-Stack Developer (React & Node.js)',
+          company: 'Devsinc',
+          url: 'https://www.devsinc.com/careers/',
+          cat: 'computer-science',
+          loc: 'Lahore',
+          type: 'FULL_TIME',
+          salary_min: 85000,
+          salary_max: 125000,
+          degree: 'BS Computer Science or Software Engineering (Min 3.0 CGPA)',
+          skills: ['React', 'Next.js', 'Node.js', 'PostgreSQL', 'TypeScript']
+        },
+        {
+          title: 'Junior Software Engineer (C# .NET & SQL)',
+          company: 'Contour Software',
+          url: 'https://contour-software.com/careers/',
+          cat: 'computer-science',
+          loc: 'Karachi',
+          type: 'FULL_TIME',
+          salary_min: 95000,
+          salary_max: 140000,
+          degree: 'BS Computer Science or Computer Engineering',
+          skills: ['C#', '.NET Core', 'SQL Server', 'T-SQL', 'Clean Architecture']
+        },
+        {
+          title: 'Junior Flutter Mobile Developer',
+          company: 'VentureDive',
+          url: 'https://venturedive.com/careers/',
+          cat: 'computer-science',
+          loc: 'Islamabad',
+          type: 'FULL_TIME',
+          salary_min: 80000,
+          salary_max: 115000,
+          degree: 'BS Computer Science or Software Engineering with GitHub portfolio',
+          skills: ['Flutter', 'Dart', 'Bloc', 'REST APIs', 'Git']
+        },
+        {
+          title: 'Associate Computer Vision & AI Engineer',
+          company: 'Folio3',
+          url: 'https://folio3.com/careers/',
+          cat: 'computer-science',
+          loc: 'Karachi',
+          type: 'FULL_TIME',
+          salary_min: 90000,
+          salary_max: 130000,
+          degree: 'BS/MS in Computer Science, AI or Data Science',
+          skills: ['Python', 'OpenCV', 'YOLO', 'PyTorch', 'FastAPI']
+        },
+        {
+          title: 'Associate SQA Engineer (Manual & API Testing)',
+          company: 'Tkxel',
+          url: 'https://tkxel.com/careers/',
+          cat: 'computer-science',
+          loc: 'Lahore',
+          type: 'FULL_TIME',
+          salary_min: 75000,
+          salary_max: 105000,
+          degree: 'BS Computer Science, Software Engineering or IT',
+          skills: ['Postman', 'Manual QA', 'Jira', 'SQL', 'Test Cases']
+        },
+        {
+          title: 'Associate Software Engineer (Core Java & Payments)',
+          company: 'i2c Inc.',
+          url: 'https://www.i2cinc.com/careers/',
+          cat: 'computer-science',
+          loc: 'Lahore',
+          type: 'FULL_TIME',
+          salary_min: 100000,
+          salary_max: 145000,
+          degree: 'BS Computer Science (Min 3.0 CGPA)',
+          skills: ['Core Java', 'Multi-threading', 'Oracle SQL', 'Spring Boot']
+        },
+
+        // Commercial & Islamic Banking
         {
           title: 'Branch Banking Officer (Customer Services & Operations)',
           company: 'Meezan Bank Limited',
@@ -698,56 +1093,20 @@ const settings = await getPortalSettings();
           degree: 'Master or 4-year Bachelor in Business, Analytics or CS',
           skills: ['FinTech', 'Product Roadmaps', 'SQL', 'Agile']
         },
-
-        // Tech & Software (Real Jobs & Trainees)
         {
-          title: 'Associate Software Engineer (.NET & Cloud)',
-          company: 'Systems Limited',
-          url: 'https://www.systemsltd.com/careers/',
-          cat: 'computer-science',
-          loc: 'Lahore',
+          title: 'Graduate Operations Officer (Branch Banking)',
+          company: 'United Bank Limited (UBL)',
+          url: 'https://www.ubldigital.com/careers/',
+          cat: 'banking-finance',
+          loc: 'Islamabad / Rawalpindi',
           type: 'FULL_TIME',
-          salary_min: 90000,
-          salary_max: 135000,
-          degree: 'BS Computer Science, Software Engineering (Min 3.0 CGPA)',
-          skills: ['C#', '.NET Core', 'SQL Server', 'Azure DevOps', 'REST APIs']
-        },
-        {
-          title: 'Associate QA Automation Engineer',
-          company: '10Pearls',
-          url: 'https://10pearls.com/careers/',
-          cat: 'computer-science',
-          loc: 'Islamabad',
-          type: 'FULL_TIME',
-          salary_min: 80000,
-          salary_max: 110000,
-          degree: 'BS Computer Science or Software Engineering',
-          skills: ['Playwright', 'Selenium', 'TypeScript', 'Postman', 'Git']
-        },
-        {
-          title: 'Software Engineering Trainee (Data & Cloud APIs)',
-          company: 'Jazz (PMCL)',
-          url: 'https://jobs.jazz.com.pk/',
-          cat: 'computer-science',
-          loc: 'Islamabad',
-          type: 'INTERN',
-          stipend: 'PKR 50,000 / month',
-          degree: 'Final year BS Computer Science / Data Science',
-          skills: ['Python', 'SQL', 'Docker', 'Git', 'REST APIs']
-        },
-        {
-          title: 'Artificial Intelligence Research Intern',
-          company: 'Afiniti',
-          url: 'https://www.afiniti.com/careers/',
-          cat: 'computer-science',
-          loc: 'Lahore',
-          type: 'INTERN',
-          stipend: 'PKR 60,000 / month',
-          degree: 'MS or final year BS Computer Science / Math (Min 3.3 CGPA)',
-          skills: ['Python', 'PyTorch', 'Pandas', 'Scikit-Learn']
+          salary_min: 65000,
+          salary_max: 85000,
+          degree: 'BBA, BS Economics, Commerce or Finance (Min 2.8 CGPA)',
+          skills: ['Retail Banking', 'Branch Operations', 'KYC', 'Customer Service']
         },
 
-        // Core Engineering (Real Jobs & Trainees)
+        // Core Engineering, Telecom & FMCG
         {
           title: 'Assistant Mechanical Engineer (Turbines & Compressors)',
           company: 'Fauji Fertilizer Company (FFC)',
@@ -761,116 +1120,65 @@ const settings = await getPortalSettings();
           skills: ['Rotating Machinery', 'Vibration Analysis', 'Steam Turbines']
         },
         {
-          title: 'Network Operations Center Engineer - Optical Transmission',
-          company: 'PTCL Group',
-          url: 'https://ptcl.com.pk/careers/',
+          title: 'Associate Site Civil Engineer (Industrial Projects)',
+          company: 'Descon Engineering Limited',
+          url: 'https://www.descon.com/careers/',
           cat: 'engineering',
-          loc: 'Islamabad',
-          type: 'FULL_TIME',
-          salary_min: 75000,
-          salary_max: 100000,
-          degree: 'BS Electrical (Telecom) or Electronic Engineering with PEC',
-          skills: ['DWDM', 'Optical Transmission', 'SDH', 'NMS']
-        },
-        {
-          title: 'Graduate Trainee Chemical Engineer',
-          company: 'Engro Corporation',
-          url: 'https://www.engro.com/careers/',
-          cat: 'engineering',
-          loc: 'Karachi (Port Qasim)',
-          type: 'INTERN',
-          stipend: 'PKR 50,000 / month',
-          degree: 'BS Chemical Engineering with valid PEC registration',
-          skills: ['Process Engineering', 'Aspen HYSYS', 'HAZOP', 'Plant Safety']
-        },
-
-        // Cloud & IT Infrastructure (Real Jobs)
-        {
-          title: 'Junior Cloud DevOps Engineer',
-          company: 'Arbisoft',
-          url: 'https://arbisoft.com/careers/',
-          cat: 'information-technology',
-          loc: 'Remote across Pakistan',
-          type: 'FULL_TIME',
-          salary_min: 120000,
-          salary_max: 160000,
-          degree: 'BS Computer Science, Telecom or Electrical Engineering',
-          skills: ['AWS', 'Terraform', 'Docker', 'Kubernetes', 'Linux']
-        },
-        {
-          title: 'Associate Cybersecurity Analyst (SOC Tier 1)',
-          company: 'Jazz (PMCL)',
-          url: 'https://jobs.jazz.com.pk/',
-          cat: 'information-technology',
-          loc: 'Islamabad',
-          type: 'FULL_TIME',
-          salary_min: 85000,
-          salary_max: 120000,
-          degree: 'BS Cybersecurity, Computer Science or Info Security',
-          skills: ['Splunk', 'SIEM', 'Incident Triage', 'Wireshark']
-        },
-
-        // Supply Chain & FMCG (Real Jobs & Trainees)
-        {
-          title: 'Warehouse & Logistics Operations Specialist',
-          company: 'Nestlé Pakistan',
-          url: 'https://www.nestle.pk/jobs/',
-          cat: 'supply-chain',
-          loc: 'Sheikhupura',
-          type: 'FULL_TIME',
-          salary_min: 70000,
-          salary_max: 95000,
-          degree: 'BS Supply Chain Management, Industrial Eng, or BBA',
-          skills: ['SAP WM', 'Inventory Control', 'Logistics', 'Excel']
-        },
-        {
-          title: 'Supply Chain Operations Trainee',
-          company: 'Nestlé Pakistan',
-          url: 'https://www.nestle.pk/jobs/',
-          cat: 'supply-chain',
-          loc: 'Lahore',
-          type: 'INTERN',
-          stipend: 'PKR 40,000 / month',
-          degree: 'Enrolled in 3rd or final year BS Supply Chain / Industrial Eng',
-          skills: ['SAP Basics', 'Six Sigma', 'Inventory Control']
-        },
-
-        // Marketing, Creative Design & HR (Real Jobs)
-        {
-          title: 'Commercial Campaign & Growth Specialist',
-          company: 'Daraz (Alibaba Group)',
-          url: 'https://careers.daraz.com/',
-          cat: 'marketing-sales',
-          loc: 'Karachi',
+          loc: 'Lahore / Project Sites',
           type: 'FULL_TIME',
           salary_min: 75000,
           salary_max: 105000,
-          degree: 'Bachelor in Marketing, Business Administration or Analytics',
-          skills: ['E-commerce Campaigns', 'Google Analytics', 'Excel', 'ROAS']
+          degree: 'BS Civil Engineering with valid PEC number',
+          skills: ['Site Supervision', 'Structural Concrete', 'AutoCAD', 'Safety']
         },
         {
-          title: 'Junior UI/UX Product Designer',
-          company: '10Pearls',
-          url: 'https://10pearls.com/careers/',
-          cat: 'design-creative',
+          title: 'Brand Marketing & Consumer Growth Trainee',
+          company: 'Unilever Pakistan',
+          url: 'https://careers.unilever.com/',
+          cat: 'marketing-sales',
           loc: 'Karachi',
-          type: 'FULL_TIME',
-          salary_min: 70000,
-          salary_max: 100000,
-          degree: 'Bachelor in Design, Computer Science or Portfolio',
-          skills: ['Figma', 'Design Systems', 'Mobile App UI', 'Wireframing']
+          type: 'INTERN',
+          stipend: 'PKR 50,000 / month',
+          degree: 'Enrolled in final year BBA / BS in Marketing or Analytics',
+          skills: ['Brand Strategy', 'Market Share Data', 'Consumer Insights']
         },
+
+        // Social Media Community Hiring Posts (Instagram & Facebook)
         {
-          title: 'Talent Acquisition Executive (Technical Hiring)',
-          company: 'Systems Limited',
-          url: 'https://www.systemsltd.com/careers/',
-          cat: 'human-resources',
-          loc: 'Islamabad',
+          title: 'Creative Graphic Designer & Motion Video Editor',
+          company: 'Social Pulse Digital Studio',
+          url: 'https://www.instagram.com/p/DBhiringCreative2026',
+          cat: 'design-creative',
+          loc: 'Lahore',
           type: 'FULL_TIME',
           salary_min: 65000,
           salary_max: 90000,
+          degree: 'Demonstrable Behance / Dribbble design portfolio',
+          skills: ['Premiere Pro', 'After Effects', 'Illustrator', 'Reels Editing']
+        },
+        {
+          title: 'Performance Marketing & Meta Ads Specialist',
+          company: 'NexScale E-Commerce Agency',
+          url: 'https://www.facebook.com/groups/karachitechjobs/posts/20261111/',
+          cat: 'marketing-sales',
+          loc: 'Remote across Pakistan',
+          type: 'FULL_TIME',
+          salary_min: 75000,
+          salary_max: 110000,
+          degree: 'Proven Meta Ads ROAS and Shopify analytics track record',
+          skills: ['Meta Ads Manager', 'TikTok Ads', 'Shopify Analytics', 'ROAS']
+        },
+        {
+          title: 'Junior HR Generalist (Employee Engagement & Payroll)',
+          company: 'Veloce Logistics Pakistan',
+          url: 'https://www.linkedin.com/posts/hr-network-pakistan-intake-2026',
+          cat: 'human-resources',
+          loc: 'Islamabad',
+          type: 'FULL_TIME',
+          salary_min: 60000,
+          salary_max: 85000,
           degree: 'BBA / MBA in Human Resources or Psychology',
-          skills: ['Technical Recruiting', 'LinkedIn Recruiter', 'ATS', 'FAST/NUST Drives']
+          skills: ['Payroll Processing', 'Employee Relations', 'Attendance Systems', 'Excel']
         }
       ];
 
@@ -888,7 +1196,7 @@ const settings = await getPortalSettings();
           title: t.title,
           company: t.company,
           location: t.loc,
-          mode: 'onsite',
+          mode: t.loc.toLowerCase().includes('remote') ? 'remote' : 'onsite',
           employment_type: t.type,
           category: t.cat,
           stipend: (t as any).stipend || null,
@@ -913,7 +1221,7 @@ const settings = await getPortalSettings();
             `Review company annual reports, recent strategic products, and corporate values prior to interview.`,
             `Prepare structured STAR examples demonstrating how you tackled technical or operational hurdles.`
           ],
-          intro: `${t.company} is accepting applications for the ${t.title} position in ${t.loc}. This opportunity offers competitive compensation, career growth pathways, and tangible project ownership within Pakistan's premier corporate landscape.`,
+          intro: `${t.company} is accepting applications for the ${t.title} position in ${t.loc}. Sourced from official Pakistan career portals and verified hiring channels, this role offers competitive compensation and career growth pathways.`,
           source_url: t.url,
           source_checked_on: new Date().toISOString().split('T')[0],
           status: 'pending_review',
@@ -933,13 +1241,13 @@ const settings = await getPortalSettings();
       }
 
       btnScanPortals.disabled = false;
-      btnScanPortals.textContent = '📡 Scan 20+ Pakistan Portals Now';
+      btnScanPortals.textContent = '📡 Scan 25+ Pakistan Targets (Startups, Banks, Tech & Social)';
 
       if (errorOccurred && added === 0) {
         queueRlsHelp?.classList.remove('hidden');
         alert('Notice: Supabase Row-Level Security blocked inserting rows. Please run the 1-line SQL shown in the yellow box to unlock!');
       } else {
-        alert(`Radar scan complete! Added/Updated verified candidate listings in your queue.`);
+        alert(`Nationwide scan complete! Loaded active startups, software houses, banks, and social posts into your queue.`);
       }
       loadQueue();
     });

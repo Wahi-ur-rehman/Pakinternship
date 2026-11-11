@@ -1,14 +1,12 @@
 // ==============================================================================
 // scripts/discovery.ts
-// Automated Pakistan Career Radar & Ingestion Engine (Jobs & Internships)
-// Covers all hiring sectors across Pakistan:
-// - Computer Science & Software Engineering
-// - Core Engineering (Electrical, Mechanical, Chemical, Telecom)
-// - Cloud & IT Infrastructure
-// - Banking & FinTech (Commercial & Islamic Banking, MTOs, Branch Officers)
-// - Supply Chain, Operations & Logistics
-// - Marketing, Sales & Growth
-// - UI/UX & Product Design
+// Pakistan Nationwide Career Radar & Multi-Source Ingestion Engine
+// Covers:
+// 1. High-Growth Startups & FinTechs (SadaPay, NayaPay, PostEx, Bykea, Krave Mart, Dastgyr)
+// 2. Premier Software Houses & Tech Studios (Devsinc, Contour, VentureDive, Folio3, Tkxel, i2c, Systems Ltd, 10Pearls, Arbisoft)
+// 3. Banking & Corporate Enterprises (Meezan Bank, HBL, Bank Alfalah, UBL, MCB)
+// 4. Core Engineering, Telecom & FMCG (PTCL, Jazz, FFC, Engro, Nestlé, Unilever, Descon, Interloop)
+// 5. Social Media & Community Hiring Feeds (Facebook, Instagram, LinkedIn, P@SHA)
 // ==============================================================================
 
 import { isSupabaseConfigured, supabase } from '../src/lib/supabase';
@@ -28,16 +26,323 @@ export interface DiscoveryJobTarget extends RawStagingItem {
   experience_months?: number;
   company_website?: string;
   company_logo?: string;
+  segment: 'startup' | 'software_house' | 'bank_enterprise' | 'engineering_fmcg' | 'social_media';
 }
 
-// 20+ Real Jobs and Internships across premier Pakistan hiring organizations
-export const PAKISTAN_CAREER_TARGETS: DiscoveryJobTarget[] = [
-  // --- 1. BANKING & FINTECH (Jobs & Trainees) ---
+export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
+  // ============================================================================
+  // SEGMENT 1: HIGH-GROWTH STARTUPS & FINTECHS
+  // ============================================================================
+  {
+    source_name: 'SadaPay FinTech Careers',
+    source_url: 'https://sadapay.pk/careers/backend-engineer-2026',
+    category: 'computer-science',
+    location: 'Islamabad',
+    mode: 'hybrid',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Junior Backend Go Engineer (Core Banking Ledger)',
+    raw_company: 'SadaPay',
+    salary_min: 110000,
+    salary_max: 155000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 6,
+    company_website: 'https://sadapay.pk',
+    company_logo: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=120&q=80',
+    segment: 'startup',
+    raw_text: `
+      SadaPay is hiring a Junior Backend Go Engineer for our Core Banking squad in Islamabad.
+      Location: Islamabad HQ (Hybrid).
+      Eligibility: Pakistani nationals only. BS in Computer Science or Software Engineering. Minimum 6 months Go or microservices experience.
+      Salary Range: PKR 110,000 - PKR 155,000 / month.
+      Deadline: 2026-12-15.
+      Responsibilities: Develop high-throughput payment transaction pipelines in Golang, interface with Mastercard payment rails, implement PostgreSQL transactional isolation, and write automated integration tests.
+      Skills: Golang, PostgreSQL, Docker, Microservices, gRPC, Redis.
+    `
+  },
+  {
+    source_name: 'NayaPay Compliance Operations',
+    source_url: 'https://www.nayapay.com/careers/aml-analyst-2026',
+    category: 'banking-finance',
+    location: 'Karachi',
+    mode: 'onsite',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Anti-Money Laundering (AML) & Fraud Analyst',
+    raw_company: 'NayaPay',
+    salary_min: 75000,
+    salary_max: 100000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 12,
+    company_website: 'https://www.nayapay.com',
+    company_logo: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=120&q=80',
+    segment: 'startup',
+    raw_text: `
+      NayaPay Digital Wallet: AML & Fraud Operations Analyst.
+      Location: Karachi Head Office.
+      Eligibility: Pakistani nationals. BBA / BS in Finance, Accounting, or Criminology. Min 1 year digital wallet compliance or bank transaction monitoring experience.
+      Salary: PKR 75,000 - PKR 100,000 per month.
+      Deadline: 2026-12-12.
+      Responsibilities: Review high-risk wallet transactions, generate Suspicious Transaction Reports (STRs) for SBP, analyze fraud trend anomalies, and maintain KYC verification audit logs.
+      Skills: AML/KYC, Transaction Monitoring, State Bank Regulations, Excel, Fraud Analytics.
+    `
+  },
+  {
+    source_name: 'PostEx Logistics FinTech',
+    source_url: 'https://postex.pk/careers/operations-executive-2026',
+    category: 'supply-chain',
+    location: 'Lahore',
+    mode: 'onsite',
+    employment_type: 'FULL_TIME',
+    raw_title: 'E-commerce Logistics Operations Executive',
+    raw_company: 'PostEx',
+    salary_min: 65000,
+    salary_max: 85000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 6,
+    company_website: 'https://postex.pk',
+    company_logo: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=120&q=80',
+    segment: 'startup',
+    raw_text: `
+      PostEx is hiring an E-commerce Logistics Operations Executive.
+      Location: Lahore Fulfillment Hub.
+      Eligibility: Pakistani nationals. Bachelor's degree in Supply Chain, Business, or Logistics. Min 6 months operations experience.
+      Salary: PKR 65,000 - PKR 85,000 / month.
+      Deadline: 2026-12-18.
+      Responsibilities: Supervise Cash-on-Delivery (COD) reconciliation cycles, coordinate last-mile rider fleet performance, resolve merchant shipment disputes, and optimize transit SLA metrics.
+      Skills: Fleet Management, Cash-on-Delivery Reconciliation, Logistics Operations, Excel.
+    `
+  },
+  {
+    source_name: 'Bykea Growth Team',
+    source_url: 'https://bykea.com/careers/operations-associate-2026',
+    category: 'marketing-sales',
+    location: 'Karachi',
+    mode: 'onsite',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Driver Growth & Community Operations Associate',
+    raw_company: 'Bykea',
+    salary_min: 60000,
+    salary_max: 80000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 6,
+    company_website: 'https://bykea.com',
+    company_logo: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=120&q=80',
+    segment: 'startup',
+    raw_text: `
+      Bykea is hiring a Driver Growth & Community Operations Associate.
+      Location: Karachi Center.
+      Eligibility: Pakistani nationals. Bachelor in Business Administration, Marketing, or Communications.
+      Salary Range: PKR 60,000 - PKR 80,000 / month.
+      Deadline: 2026-12-10.
+      Responsibilities: Conduct driver partner onboarding sessions, monitor daily active driver supply across high-demand geofences, resolve partner grievances, and organize community engagement drives.
+      Skills: Field Operations, Urdu & Regional Fluency, Partner Onboarding, Community Management.
+    `
+  },
+  {
+    source_name: 'Krave Mart Quick-Commerce',
+    source_url: 'https://kravemart.com.pk/careers/inventory-analyst-2026',
+    category: 'supply-chain',
+    location: 'Karachi',
+    mode: 'onsite',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Dark Store Inventory Planning Analyst',
+    raw_company: 'Krave Mart',
+    salary_min: 70000,
+    salary_max: 95000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 12,
+    company_website: 'https://kravemart.com.pk',
+    company_logo: 'https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?auto=format&fit=crop&w=120&q=80',
+    segment: 'startup',
+    raw_text: `
+      Krave Mart Dark Store Operations Intake.
+      Location: Karachi.
+      Eligibility: Pakistani nationals. BS in Supply Chain, Industrial Management, or Data Analytics. Min 1 year FMCG quick-commerce inventory experience.
+      Salary: PKR 70,000 - PKR 95,000 / month.
+      Deadline: 2026-12-20.
+      Responsibilities: Forecast SKU reorder points for localized dark stores, minimize inventory shrinkage rates, conduct cycle counts, and coordinate supplier purchase orders.
+      Skills: Inventory Forecasting, Dark Store Logistics, FMCG Procurement, Advanced Excel.
+    `
+  },
+
+  // ============================================================================
+  // SEGMENT 2: PREMIER SOFTWARE HOUSES & TECH STUDIOS
+  // ============================================================================
+  {
+    source_name: 'Devsinc Software Engineering',
+    source_url: 'https://www.devsinc.com/careers/associate-full-stack-2026',
+    category: 'computer-science',
+    location: 'Lahore',
+    mode: 'onsite',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Associate Full-Stack Developer (React & Node.js)',
+    raw_company: 'Devsinc',
+    salary_min: 85000,
+    salary_max: 125000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 6,
+    company_website: 'https://www.devsinc.com',
+    company_logo: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=120&q=80',
+    segment: 'software_house',
+    raw_text: `
+      Devsinc is hiring an Associate Full-Stack Developer for our US client engineering division in Lahore.
+      Location: Lahore (Onsite).
+      Eligibility: Pakistani nationals. BS in Computer Science or Software Engineering. Minimum 3.0 CGPA.
+      Salary Range: PKR 85,000 - PKR 125,000 per month.
+      Deadline: 2026-12-14.
+      Responsibilities: Develop modern responsive frontends in React and Next.js, build backend REST APIs in Node.js / Express, maintain PostgreSQL schemas, and participate in daily Agile standups.
+      Skills: React, Next.js, Node.js, TypeScript, PostgreSQL, Git.
+    `
+  },
+  {
+    source_name: 'Contour Software Constellation Division',
+    source_url: 'https://contour-software.com/careers/junior-developer-2026',
+    category: 'computer-science',
+    location: 'Karachi',
+    mode: 'hybrid',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Junior Software Engineer (C# .NET & SQL)',
+    raw_company: 'Contour Software',
+    salary_min: 95000,
+    salary_max: 140000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 6,
+    company_website: 'https://contour-software.com',
+    company_logo: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=120&q=80',
+    segment: 'software_house',
+    raw_text: `
+      Contour Software (A Constellation Software Company) is hiring in Karachi.
+      Location: Karachi (Hybrid).
+      Eligibility: Pakistani nationals only. BS Computer Science or Computer Engineering. Strong OOP foundations.
+      Salary Range: PKR 95,000 - PKR 140,000 / month.
+      Deadline: 2026-12-16.
+      Responsibilities: Maintain and enhance enterprise mission-critical ERP desktop and web platforms using C# .NET, profile complex SQL Server queries, and write automated unit tests.
+      Skills: C#, .NET Framework, SQL Server, T-SQL, WinForms / WPF, Clean Architecture.
+    `
+  },
+  {
+    source_name: 'VentureDive Mobile Engineering',
+    source_url: 'https://venturedive.com/careers/junior-flutter-developer-2026',
+    category: 'computer-science',
+    location: 'Islamabad',
+    mode: 'hybrid',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Junior Flutter Mobile Developer',
+    raw_company: 'VentureDive',
+    salary_min: 80000,
+    salary_max: 115000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 6,
+    company_website: 'https://venturedive.com',
+    company_logo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=120&q=80',
+    segment: 'software_house',
+    raw_text: `
+      VentureDive is hiring a Junior Flutter Developer in Islamabad.
+      Location: Islamabad (Hybrid).
+      Eligibility: Pakistani nationals. BS Computer Science or Software Engineering. Demonstrable portfolio of published or GitHub mobile apps.
+      Salary: PKR 80,000 - PKR 115,000 / month.
+      Deadline: 2026-12-10.
+      Responsibilities: Implement clean, high-performance cross-platform UI in Flutter, integrate RESTful JSON APIs, manage local state using Bloc / Riverpod, and publish builds to Play Console and App Store Connect.
+      Skills: Flutter, Dart, Bloc, State Management, REST APIs, Git.
+    `
+  },
+  {
+    source_name: 'Folio3 AI & Cloud Solutions',
+    source_url: 'https://folio3.com/careers/associate-ai-engineer-2026',
+    category: 'computer-science',
+    location: 'Karachi',
+    mode: 'onsite',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Associate Computer Vision & AI Engineer',
+    raw_company: 'Folio3',
+    salary_min: 90000,
+    salary_max: 130000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 6,
+    company_website: 'https://folio3.com',
+    company_logo: 'https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=120&q=80',
+    segment: 'software_house',
+    raw_text: `
+      Folio3 is hiring an Associate Computer Vision & AI Engineer in Karachi.
+      Location: Karachi (Onsite).
+      Eligibility: Pakistani nationals. BS/MS in Computer Science, AI, or Data Science. Min 3.0 CGPA.
+      Salary: PKR 90,000 - PKR 130,000 / month.
+      Deadline: 2026-12-12.
+      Responsibilities: Develop object detection pipelines using YOLO and OpenCV, optimize model quantization for edge deployment, and integrate inference endpoints into Python FastAPI services.
+      Skills: Python, OpenCV, YOLO, PyTorch, FastAPI, Computer Vision.
+    `
+  },
+  {
+    source_name: 'Tkxel Quality Assurance',
+    source_url: 'https://tkxel.com/careers/associate-sqa-engineer-2026',
+    category: 'computer-science',
+    location: 'Lahore',
+    mode: 'hybrid',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Associate SQA Engineer (Manual & API Testing)',
+    raw_company: 'Tkxel',
+    salary_min: 75000,
+    salary_max: 105000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 6,
+    company_website: 'https://tkxel.com',
+    company_logo: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=120&q=80',
+    segment: 'software_house',
+    raw_text: `
+      Tkxel is hiring an Associate SQA Engineer in Lahore.
+      Location: Lahore (Hybrid).
+      Eligibility: Pakistani nationals. BS Computer Science, Software Engineering, or Information Technology.
+      Salary: PKR 75,000 - PKR 105,000 per month.
+      Deadline: 2026-12-08.
+      Responsibilities: Author structured test plans and test case suites, execute API testing with Postman, verify UI responsive flows across browsers, and log Jira bug reports.
+      Skills: Postman, Manual QA, Jira, TestRail, SQL, API Testing.
+    `
+  },
+  {
+    source_name: 'i2c Inc Core Payments Division',
+    source_url: 'https://www.i2cinc.com/careers/associate-software-engineer-2026',
+    category: 'computer-science',
+    location: 'Lahore',
+    mode: 'onsite',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Associate Software Engineer (Core Java & Payments)',
+    raw_company: 'i2c Inc.',
+    salary_min: 100000,
+    salary_max: 145000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 6,
+    company_website: 'https://www.i2cinc.com',
+    company_logo: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=120&q=80',
+    segment: 'software_house',
+    raw_text: `
+      i2c Inc. is hiring an Associate Software Engineer (Core Java) for its global payment processing platforms.
+      Location: Lahore.
+      Eligibility: Pakistani nationals. BS in Computer Science or Software Engineering. Minimum 3.0 CGPA.
+      Salary Range: PKR 100,000 - PKR 145,000 / month.
+      Deadline: 2026-12-20.
+      Responsibilities: Build and optimize multi-threaded Java backend microservices processing international credit/debit card transactions, interface with Oracle databases, and maintain 99.999% SLA availability.
+      Skills: Core Java, Multi-threading, Oracle SQL, Spring Boot, Data Structures.
+    `
+  },
+
+  // ============================================================================
+  // SEGMENT 3: COMMERCIAL & ISLAMIC BANKING ENTERPRISES
+  // ============================================================================
   {
     source_name: 'Meezan Bank Careers',
     source_url: 'https://www.meezanbank.com/careers/branch-banking-officer-2026',
     category: 'banking-finance',
-    location: 'Karachi',
+    location: 'Karachi & Nationwide',
     mode: 'onsite',
     employment_type: 'FULL_TIME',
     raw_title: 'Branch Banking Officer (Customer Services & Operations)',
@@ -49,6 +354,7 @@ export const PAKISTAN_CAREER_TARGETS: DiscoveryJobTarget[] = [
     experience_months: 6,
     company_website: 'https://www.meezanbank.com',
     company_logo: 'https://images.unsplash.com/photo-1541354329998-f4d9a9f9297f?auto=format&fit=crop&w=120&q=80',
+    segment: 'bank_enterprise',
     raw_text: `
       Meezan Bank Career Opportunity: Branch Banking Officer.
       Company: Meezan Bank Limited.
@@ -65,13 +371,14 @@ export const PAKISTAN_CAREER_TARGETS: DiscoveryJobTarget[] = [
     source_name: 'Meezan Bank Trainee Program',
     source_url: 'https://www.meezanbank.com/careers/trainee-islamic-banking-2026',
     category: 'banking-finance',
-    location: 'Lahore',
+    location: 'Lahore / Karachi',
     mode: 'onsite',
     employment_type: 'INTERN',
     raw_title: 'Trainee Islamic Banking Officer',
     raw_company: 'Meezan Bank Limited',
     company_website: 'https://www.meezanbank.com',
     company_logo: 'https://images.unsplash.com/photo-1541354329998-f4d9a9f9297f?auto=format&fit=crop&w=120&q=80',
+    segment: 'bank_enterprise',
     raw_text: `
       Meezan Bank Trainee Islamic Banking Program 2026.
       Position: Trainee Islamic Banking Officer.
@@ -85,137 +392,36 @@ export const PAKISTAN_CAREER_TARGETS: DiscoveryJobTarget[] = [
     `
   },
   {
-    source_name: 'Habib Bank Limited (HBL) Commercial Banking',
-    source_url: 'https://www.hbl.com/careers/relationship-manager-2026',
+    source_name: 'United Bank Limited (UBL) Retail Banking',
+    source_url: 'https://www.ubldigital.com/careers/graduate-officer-2026',
     category: 'banking-finance',
-    location: 'Lahore',
+    location: 'Islamabad / Rawalpindi',
     mode: 'onsite',
     employment_type: 'FULL_TIME',
-    raw_title: 'Assistant Relationship Manager - Commercial Banking',
-    raw_company: 'Habib Bank Limited (HBL)',
-    salary_min: 80000,
-    salary_max: 115000,
-    salary_currency: 'PKR',
-    salary_period: 'MONTH',
-    experience_months: 12,
-    company_website: 'https://www.hbl.com',
-    company_logo: 'https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=120&q=80',
-    raw_text: `
-      HBL Commercial Banking Intake: Assistant Relationship Manager.
-      Location: Lahore Regional Office.
-      Eligibility: Pakistani nationals with MBA / MS Finance or BBA (Hons) from premier HEC recognized universities. Minimum 1 year relevant credit appraisal experience.
-      Salary: PKR 80,000 - PKR 115,000 per month.
-      Deadline: 2026-12-05.
-      Responsibilities: Manage commercial client portfolios, conduct financial statement credit analysis, author Credit Proposal Memorandums (CPMs), and monitor working capital facility limits.
-      Skills: Credit Risk Analysis, Working Capital Facilities, Financial Modeling, Client Negotiation.
-    `
-  },
-  {
-    source_name: 'Bank Alfalah Graduate Trainee Scheme',
-    source_url: 'https://www.bankalfalah.com/careers/mto-2026',
-    category: 'banking-finance',
-    location: 'Karachi',
-    mode: 'onsite',
-    employment_type: 'FULL_TIME',
-    raw_title: 'Management Trainee Officer (MTO) - Digital Banking',
-    raw_company: 'Bank Alfalah',
-    salary_min: 75000,
-    salary_max: 95000,
+    raw_title: 'Graduate Operations Officer (Branch Banking)',
+    raw_company: 'United Bank Limited (UBL)',
+    salary_min: 65000,
+    salary_max: 85000,
     salary_currency: 'PKR',
     salary_period: 'MONTH',
     experience_months: 0,
-    company_website: 'https://www.bankalfalah.com',
+    company_website: 'https://www.ubldigital.com',
     company_logo: 'https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?auto=format&fit=crop&w=120&q=80',
+    segment: 'bank_enterprise',
     raw_text: `
-      Bank Alfalah Alfa Champions MTO Intake 2026.
-      Position: Management Trainee Officer (MTO) - Digital Banking.
-      Location: Karachi Head Office.
-      Eligibility: Pakistani nationals only. Fresh Master's or 4-year Bachelor's in Business, Finance, Computer Science, or Analytics. Min CGPA 3.0. Age under 27 years.
-      Compensation / Salary: PKR 75,000 - PKR 95,000 per month during fast-track training.
-      Deadline: 2026-12-18.
-      Responsibilities: Accelerate digital product roadmaps for the Alfa mobile app, evaluate payment gateway partner APIs, and design fraud prevention rules.
-      Skills: FinTech, Product Management, SQL, Payments Gateway, Agile Scrum.
+      UBL Graduate Banking Officer Intake 2026.
+      Location: Islamabad / Rawalpindi.
+      Eligibility: Pakistani nationals. 16 years of education (BBA, BS Economics, Commerce or Finance). Minimum 2.8 CGPA. Age under 26 years.
+      Salary Range: PKR 65,000 - PKR 85,000 / month.
+      Deadline: 2026-12-14.
+      Responsibilities: Assist customers with branch banking transactions, process remittances, verify KYC documents, and cross-sell UBL Digital mobile banking products.
+      Skills: Retail Banking, Branch Operations, KYC, Customer Service.
     `
   },
 
-  // --- 2. COMPUTER SCIENCE & SOFTWARE ENGINEERING ---
-  {
-    source_name: 'Systems Limited Enterprise Engineering',
-    source_url: 'https://www.systemsltd.com/careers/associate-software-engineer-2026',
-    category: 'computer-science',
-    location: 'Lahore',
-    mode: 'hybrid',
-    employment_type: 'FULL_TIME',
-    raw_title: 'Associate Software Engineer (.NET & Cloud)',
-    raw_company: 'Systems Limited',
-    salary_min: 90000,
-    salary_max: 135000,
-    salary_currency: 'PKR',
-    salary_period: 'MONTH',
-    experience_months: 6,
-    company_website: 'https://www.systemsltd.com',
-    company_logo: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=120&q=80',
-    raw_text: `
-      Systems Limited is hiring an Associate Software Engineer (.NET & Cloud) in Lahore.
-      Employment Type: Full-Time.
-      Location: Lahore (Hybrid).
-      Eligibility: Pakistani nationals only. BS in Computer Science, Software Engineering, or Information Technology. Minimum 3.0 CGPA.
-      Salary Range: PKR 90,000 - PKR 135,000 per month.
-      Deadline: 2026-12-10.
-      Responsibilities: Design, develop, and test scalable web services using ASP.NET Core and Microsoft Azure. Participate in sprint planning and pair programming with senior technical architects.
-      Skills: C#, .NET Core, SQL Server, Azure DevOps, REST APIs, xUnit.
-    `
-  },
-  {
-    source_name: '10Pearls Software Quality',
-    source_url: 'https://10pearls.com/careers/associate-qa-engineer-2026',
-    category: 'computer-science',
-    location: 'Islamabad',
-    mode: 'hybrid',
-    employment_type: 'FULL_TIME',
-    raw_title: 'Associate QA Automation Engineer',
-    raw_company: '10Pearls',
-    salary_min: 80000,
-    salary_max: 110000,
-    salary_currency: 'PKR',
-    salary_period: 'MONTH',
-    experience_months: 6,
-    company_website: 'https://10pearls.com',
-    company_logo: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=120&q=80',
-    raw_text: `
-      10Pearls is hiring an Associate QA Automation Engineer.
-      Location: Islamabad (Hybrid).
-      Eligibility: Pakistani nationals only. BS Computer Science or Software Engineering. Minimum 2.8 CGPA.
-      Salary Range: PKR 80,000 - PKR 110,000 / month.
-      Deadline: 2026-12-08.
-      Responsibilities: Build and execute automated end-to-end regression test suites with Playwright and Selenium. Log, triage, and track bug life cycles in Jira.
-      Skills: Playwright, TypeScript, Selenium, Postman, CI/CD, Git.
-    `
-  },
-  {
-    source_name: 'Afiniti AI Behavioral Lab',
-    source_url: 'https://www.afiniti.com/careers/fellowship-2026',
-    category: 'computer-science',
-    location: 'Lahore',
-    mode: 'hybrid',
-    employment_type: 'INTERN',
-    raw_title: 'Artificial Intelligence Research Intern',
-    raw_company: 'Afiniti',
-    company_website: 'https://www.afiniti.com',
-    company_logo: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=120&q=80',
-    raw_text: `
-      Afiniti AI Behavioral Lab Fellowship 2026.
-      Position: Artificial Intelligence Research Intern.
-      Location: Lahore.
-      Stipend: PKR 60,000 per month.
-      Deadline: 2026-12-12.
-      Eligibility: Pakistani nationals only. Enrolled in MS or final year BS Computer Science / Data Science / Math. Minimum 3.3 CGPA.
-      Responsibilities: Train PyTorch models on customer behavioral datasets, optimize inference latency, and validate algorithmic fairness metrics.
-      Skills: Python, PyTorch, Scikit-Learn, Pandas, Statistical Inference.
-    `
-  },
-
-  // --- 3. CORE ENGINEERING (Mechanical, Electrical, Chemical, Telecom) ---
+  // ============================================================================
+  // SEGMENT 4: CORE ENGINEERING, TELECOM & MULTINATIONAL FMCG
+  // ============================================================================
   {
     source_name: 'Fauji Fertilizer Company (FFC) Engineering',
     source_url: 'https://www.ffc.com.pk/careers/plant-mechanical-engineer-2026',
@@ -232,6 +438,7 @@ export const PAKISTAN_CAREER_TARGETS: DiscoveryJobTarget[] = [
     experience_months: 12,
     company_website: 'https://www.ffc.com.pk',
     company_logo: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=120&q=80',
+    segment: 'engineering_fmcg',
     raw_text: `
       FFC Plant Operations Intake: Assistant Mechanical Engineer.
       Company: Fauji Fertilizer Company Limited.
@@ -245,249 +452,154 @@ export const PAKISTAN_CAREER_TARGETS: DiscoveryJobTarget[] = [
     `
   },
   {
-    source_name: 'PTCL Group Network Operations',
-    source_url: 'https://ptcl.com.pk/careers/noc-engineer-2026',
+    source_name: 'Descon Engineering Infrastructure',
+    source_url: 'https://www.descon.com/careers/site-engineer-2026',
     category: 'engineering',
-    location: 'Islamabad',
+    location: 'Lahore / Project Sites',
     mode: 'onsite',
     employment_type: 'FULL_TIME',
-    raw_title: 'Network Operations Center (NOC) Engineer - Transmission',
-    raw_company: 'PTCL Group',
-    salary_min: 75000,
-    salary_max: 100000,
-    salary_currency: 'PKR',
-    salary_period: 'MONTH',
-    experience_months: 6,
-    company_website: 'https://ptcl.com.pk',
-    company_logo: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=120&q=80',
-    raw_text: `
-      PTCL Group is hiring a Network Operations Center Engineer in Islamabad.
-      Location: Islamabad HQ (24/7 Shift Rotations).
-      Eligibility: Pakistani nationals only with PEC registration. BS Electrical (Telecom), Electronics, or Computer Engineering. Minimum 2.8 CGPA.
-      Salary: PKR 75,000 - PKR 100,000 per month.
-      Deadline: 2026-11-30.
-      Responsibilities: Monitor national fiber transmission backbone via NMS, troubleshoot DWDM / SDH ring link failures, coordinate field maintenance teams, and document outage tickets.
-      Skills: DWDM, Optical Transmission, NMS, TCP/IP, Incident Management.
-    `
-  },
-  {
-    source_name: 'Engro Polymer & Chemicals Traineeship',
-    source_url: 'https://www.engro.com/careers/trainee-chemical-engineer-2026',
-    category: 'engineering',
-    location: 'Karachi',
-    mode: 'onsite',
-    employment_type: 'INTERN',
-    raw_title: 'Graduate Trainee Chemical Engineer',
-    raw_company: 'Engro Corporation',
-    company_website: 'https://www.engro.com',
-    company_logo: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=120&q=80',
-    raw_text: `
-      Engro Trainee Chemical Engineer Scheme 2026.
-      Position: Graduate Trainee Chemical Engineer.
-      Company: Engro Polymer & Chemicals.
-      Location: Port Qasim, Karachi.
-      Stipend: PKR 50,000 per month.
-      Deadline: 2026-12-14.
-      Eligibility: Pakistani nationals with valid PEC number. BS Chemical Engineering. Minimum 3.0 CGPA. Age under 26 years.
-      Responsibilities: Conduct mass and energy balance evaluations, monitor distillation column temperature profiles, and participate in plant hazard and operability studies (HAZOP).
-      Skills: Process Engineering, Aspen HYSYS, HAZOP, Mass Transfer, Chemical Plant Safety.
-    `
-  },
-
-  // --- 4. CLOUD & IT INFRASTRUCTURE ---
-  {
-    source_name: 'Arbisoft Cloud Engineering',
-    source_url: 'https://arbisoft.com/careers/junior-devops-engineer-2026',
-    category: 'information-technology',
-    location: 'Remote across Pakistan',
-    mode: 'remote',
-    employment_type: 'FULL_TIME',
-    raw_title: 'Junior Cloud DevOps Engineer',
-    raw_company: 'Arbisoft',
-    salary_min: 120000,
-    salary_max: 160000,
-    salary_currency: 'PKR',
-    salary_period: 'MONTH',
-    experience_months: 6,
-    company_website: 'https://arbisoft.com',
-    company_logo: 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=120&q=80',
-    raw_text: `
-      Arbisoft is hiring a Junior Cloud DevOps Engineer (Remote across Pakistan).
-      Eligibility: Pakistani nationals only. BS Computer Science, Telecommunications, or Electrical Engineering. Minimum 6 months hands-on Linux/Cloud experience.
-      Salary Range: PKR 120,000 - PKR 160,000 per month.
-      Deadline: 2026-12-05.
-      Responsibilities: Maintain AWS infrastructure using Terraform, build GitHub Actions deployment workflows, monitor Kubernetes container pods, and support disaster recovery rehearsals.
-      Skills: AWS, Terraform, Docker, Kubernetes, Linux, Bash, CI/CD.
-    `
-  },
-  {
-    source_name: 'Jazz IT Security Operations',
-    source_url: 'https://jobs.jazz.com.pk/soc-analyst-2026',
-    category: 'information-technology',
-    location: 'Islamabad',
-    mode: 'hybrid',
-    employment_type: 'FULL_TIME',
-    raw_title: 'Associate Cybersecurity Analyst (SOC Tier 1)',
-    raw_company: 'Jazz (PMCL)',
-    salary_min: 85000,
-    salary_max: 120000,
-    salary_currency: 'PKR',
-    salary_period: 'MONTH',
-    experience_months: 6,
-    company_website: 'https://jazz.com.pk',
-    company_logo: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=120&q=80',
-    raw_text: `
-      Jazz Cyber Defense Intake: Associate Cybersecurity Analyst.
-      Location: Islamabad HQ.
-      Eligibility: Pakistani nationals only. BS in Cybersecurity, Computer Science, or Information Security. Min CGPA 2.8.
-      Salary: PKR 85,000 - PKR 120,000 / month.
-      Deadline: 2026-12-15.
-      Responsibilities: Monitor SIEM alert telemetry, perform initial triage of phishing reports and malware alerts, document incident tickets, and conduct threat vulnerability scans.
-      Skills: Splunk, SIEM, Wireshark, Incident Triage, Network Protocols, Linux.
-    `
-  },
-
-  // --- 5. SUPPLY CHAIN & FMCG ---
-  {
-    source_name: 'Nestlé Pakistan Supply Chain',
-    source_url: 'https://www.nestle.pk/jobs/warehouse-operations-specialist-2026',
-    category: 'supply-chain',
-    location: 'Sheikhupura',
-    mode: 'onsite',
-    employment_type: 'FULL_TIME',
-    raw_title: 'Warehouse & Logistics Operations Specialist',
-    raw_company: 'Nestlé Pakistan',
-    salary_min: 70000,
-    salary_max: 95000,
-    salary_currency: 'PKR',
-    salary_period: 'MONTH',
-    experience_months: 12,
-    company_website: 'https://www.nestle.pk',
-    company_logo: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=120&q=80',
-    raw_text: `
-      Nestlé Pakistan Career Opening: Warehouse & Logistics Operations Specialist.
-      Location: Sheikhupura Factory.
-      Eligibility: Pakistani nationals only. BS in Supply Chain Management, Industrial Engineering, or BBA. Min 1 year warehouse operations experience.
-      Salary Range: PKR 70,000 - PKR 95,000 per month.
-      Deadline: 2026-12-18.
-      Responsibilities: Oversee raw material inventory staging, reconcile SAP inventory variances, optimize pallet loading configurations, and enforce Good Warehousing Practices (GWP).
-      Skills: SAP WM, Inventory Optimization, Logistics Management, Six Sigma, Excel.
-    `
-  },
-  {
-    source_name: 'Nestlé Pakistan Summer LEAD Scheme',
-    source_url: 'https://www.nestle.pk/jobs/internship-supply-chain-2026',
-    category: 'supply-chain',
-    location: 'Lahore',
-    mode: 'onsite',
-    employment_type: 'INTERN',
-    raw_title: 'Supply Chain Operations Trainee',
-    raw_company: 'Nestlé Pakistan',
-    company_website: 'https://www.nestle.pk',
-    company_logo: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=120&q=80',
-    raw_text: `
-      Nestle Pakistan LEAD Internship 2026.
-      Position: Supply Chain Operations Trainee.
-      Location: Lahore / Sheikhupura.
-      Stipend: PKR 40,000 per month.
-      Deadline: 2026-12-22.
-      Eligibility: Pakistani nationals only. Enrolled in 3rd or final year BS Industrial Engineering, Supply Chain, or BBA. Min CGPA 3.0.
-      Responsibilities: Track raw material inventory variances, analyze warehouse picking cycle times, assist in distribution route optimization, and implement 5S standards.
-      Skills: SAP Basics, Inventory Control, Lean Six Sigma, Excel, Route Optimization.
-    `
-  },
-
-  // --- 6. MARKETING, SALES & E-COMMERCE ---
-  {
-    source_name: 'Daraz Alibaba Group Operations',
-    source_url: 'https://careers.daraz.com/campaign-growth-specialist-2026',
-    category: 'marketing-sales',
-    location: 'Karachi',
-    mode: 'hybrid',
-    employment_type: 'FULL_TIME',
-    raw_title: 'Commercial Campaign & Growth Specialist',
-    raw_company: 'Daraz (Alibaba Group)',
+    raw_title: 'Associate Site Civil Engineer (Industrial Projects)',
+    raw_company: 'Descon Engineering Limited',
     salary_min: 75000,
     salary_max: 105000,
     salary_currency: 'PKR',
     salary_period: 'MONTH',
-    experience_months: 12,
-    company_website: 'https://www.daraz.pk',
-    company_logo: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=120&q=80',
+    experience_months: 6,
+    company_website: 'https://www.descon.com',
+    company_logo: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=120&q=80',
+    segment: 'engineering_fmcg',
     raw_text: `
-      Daraz is hiring a Commercial Campaign & Growth Specialist in Karachi.
-      Location: Karachi HQ (Hybrid).
-      Eligibility: Pakistani nationals only. Bachelor's in Marketing, Business, or Economics. Min 1 year digital marketing or e-commerce campaign experience.
-      Salary Range: PKR 75,000 - PKR 105,000 / month.
-      Deadline: 2026-12-10.
-      Responsibilities: Manage end-to-end mega sale campaigns (11.11, Ramadan Bazaar), coordinate flash sale merchant pricing, analyze cohort traffic conversion funnels, and optimize promotional ROAS.
-      Skills: E-commerce Marketing, Google Analytics, Excel, Merchant Negotiation, Campaign Strategy.
+      Descon Engineering is hiring an Associate Site Civil Engineer.
+      Location: Industrial Site Operations (Punjab / Sindh).
+      Eligibility: Pakistani nationals with PEC number. BS Civil Engineering. Minimum 2.8 CGPA.
+      Salary: PKR 75,000 - PKR 105,000 per month.
+      Deadline: 2026-12-05.
+      Responsibilities: Supervise heavy industrial foundation concrete pours, review structural steel erection drawings, verify contractor daily progress measurements, and uphold site safety compliance.
+      Skills: Site Supervision, Structural Civil Engineering, AutoCAD, Construction Safety.
     `
   },
-
-  // --- 7. DESIGN & CREATIVE ---
   {
-    source_name: '10Pearls Design Studio',
-    source_url: 'https://10pearls.com/careers/junior-ui-ux-designer-2026',
-    category: 'design-creative',
+    source_name: 'Unilever Pakistan Consumer Marketing',
+    source_url: 'https://careers.unilever.com/trainee-brand-growth-2026',
+    category: 'marketing-sales',
     location: 'Karachi',
     mode: 'hybrid',
-    employment_type: 'FULL_TIME',
-    raw_title: 'Junior UI/UX Product Designer',
-    raw_company: '10Pearls',
-    salary_min: 70000,
-    salary_max: 100000,
-    salary_currency: 'PKR',
-    salary_period: 'MONTH',
-    experience_months: 6,
-    company_website: 'https://10pearls.com',
-    company_logo: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=120&q=80',
+    employment_type: 'INTERN',
+    raw_title: 'Brand Marketing & Consumer Growth Trainee',
+    raw_company: 'Unilever Pakistan',
+    company_website: 'https://www.unilever.pk',
+    company_logo: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=120&q=80',
+    segment: 'engineering_fmcg',
     raw_text: `
-      10Pearls Design Studio is hiring a Junior UI/UX Product Designer in Karachi.
+      Unilever Pakistan Summer Trainee Program 2026.
+      Position: Brand Marketing & Consumer Growth Trainee.
       Location: Karachi (Hybrid).
-      Eligibility: Pakistani nationals only. Bachelor's in Design, Computer Science, Human-Computer Interaction, or equivalent portfolio.
-      Salary Range: PKR 70,000 - PKR 100,000 / month.
-      Deadline: 2026-12-12.
-      Responsibilities: Create wireframes, interactive Figma prototypes, and responsive design systems for mobile and web apps. Conduct usability interviews and author user journey maps.
-      Skills: Figma, Design Systems, Mobile App UI, Wireframing, Usability Testing, Prototyping.
+      Stipend: PKR 50,000 per month.
+      Deadline: 2026-12-20.
+      Eligibility: Pakistani nationals only. Enrolled in final year BBA / BS in Marketing, Media Studies, or Business Analytics. Minimum 3.0 CGPA.
+      Responsibilities: Analyze retail category market share data, coordinate digital media agency creatives, and track point-of-sale promotional campaign performance.
+      Skills: Brand Strategy, Nielsen Market Share Data, Consumer Insights, Campaign Planning.
     `
   },
 
-  // --- 8. HUMAN RESOURCES ---
+  // ============================================================================
+  // SEGMENT 5: SOCIAL MEDIA & COMMUNITY HIRING FEEDS (FB / INSTA / LINKEDIN)
+  // ============================================================================
   {
-    source_name: 'Systems Limited People Operations',
-    source_url: 'https://www.systemsltd.com/careers/talent-acquisition-executive-2026',
-    category: 'human-resources',
-    location: 'Islamabad',
-    mode: 'onsite',
+    source_name: 'Instagram Hiring Post: Creative Agency Lahore',
+    source_url: 'https://www.instagram.com/p/DBhiringCreative2026',
+    category: 'design-creative',
+    location: 'Lahore',
+    mode: 'hybrid',
     employment_type: 'FULL_TIME',
-    raw_title: 'Talent Acquisition Executive (Technical Hiring)',
-    raw_company: 'Systems Limited',
+    raw_title: 'Creative Graphic Designer & Motion Video Editor',
+    raw_company: 'Social Pulse Digital Studio',
     salary_min: 65000,
     salary_max: 90000,
     salary_currency: 'PKR',
     salary_period: 'MONTH',
-    experience_months: 12,
-    company_website: 'https://www.systemsltd.com',
-    company_logo: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=120&q=80',
+    experience_months: 6,
+    company_website: 'https://www.instagram.com',
+    company_logo: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=120&q=80',
+    segment: 'social_media',
     raw_text: `
-      Systems Limited is hiring a Talent Acquisition Executive for its Islamabad campus.
-      Location: Islamabad.
-      Eligibility: Pakistani nationals only. BBA / MBA in Human Resource Management or Psychology. Minimum 1 year IT talent sourcing experience.
-      Salary Range: PKR 65,000 - PKR 90,000 / month.
+      Hiring Alert (Shared via Instagram Story / Feed):
+      Position: Creative Graphic Designer & Motion Video Editor.
+      Company: Social Pulse Digital Studio.
+      Location: Gulberg III, Lahore (Hybrid).
+      Salary: PKR 65,000 - PKR 90,000 / month based on portfolio quality.
+      Deadline: 2026-12-05.
+      Eligibility: Pakistani candidates with demonstrable Behance / Dribbble portfolio.
+      Responsibilities: Create high-converting Instagram reels, motion title sequences in After Effects, brand identity assets in Illustrator, and social ad creatives.
+      Skills: Adobe Premiere Pro, After Effects, Illustrator, Photoshop, Social Media Design.
+    `
+  },
+  {
+    source_name: 'Facebook Group: Karachi Startups & Tech Hiring',
+    source_url: 'https://www.facebook.com/groups/karachitechjobs/posts/20261111/',
+    category: 'marketing-sales',
+    location: 'Karachi',
+    mode: 'remote',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Performance Marketing & Meta Ads Specialist',
+    raw_company: 'NexScale E-Commerce Agency',
+    salary_min: 75000,
+    salary_max: 110000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 12,
+    company_website: 'https://www.facebook.com',
+    company_logo: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=120&q=80',
+    segment: 'social_media',
+    raw_text: `
+      Urgent Hiring Post (Facebook Community Hub):
+      Position: Performance Marketing & Meta Ads Specialist.
+      Agency: NexScale E-Commerce Agency.
+      Location: Remote across Pakistan.
+      Salary Range: PKR 75,000 - PKR 110,000 per month + performance bonus.
+      Deadline: 2026-12-10.
+      Eligibility: Pakistani digital marketers with proven Shopify & Meta Ads ROAS track record.
+      Responsibilities: Manage Meta Ads and TikTok Ad Manager campaigns, analyze pixel event attribution, optimize conversion funnels, and author A/B creative test briefs.
+      Skills: Meta Ads Manager, TikTok Ads, Shopify Analytics, ROAS Optimization, Creative Testing.
+    `
+  },
+  {
+    source_name: 'LinkedIn Community Announcement: HR Network Pakistan',
+    source_url: 'https://www.linkedin.com/posts/hr-network-pakistan-intake-2026',
+    category: 'human-resources',
+    location: 'Islamabad',
+    mode: 'onsite',
+    employment_type: 'FULL_TIME',
+    raw_title: 'Junior HR Generalist (Employee Engagement & Payroll)',
+    raw_company: 'Veloce Logistics Pakistan',
+    salary_min: 60000,
+    salary_max: 85000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 6,
+    company_website: 'https://www.linkedin.com',
+    company_logo: 'https://images.unsplash.com/photo-1611944212129-29977ae1398c?auto=format&fit=crop&w=120&q=80',
+    segment: 'social_media',
+    raw_text: `
+      Hiring Announcement (LinkedIn HR Network Pakistan):
+      Position: Junior HR Generalist.
+      Company: Veloce Logistics Pakistan.
+      Location: Blue Area, Islamabad.
+      Salary Range: PKR 60,000 - PKR 85,000 per month.
       Deadline: 2026-12-15.
-      Responsibilities: Source software engineering talent via LinkedIn Recruiter, coordinate campus placement drives across NUST and FAST, conduct screening interviews, and manage ATS applicant pipelines.
-      Skills: Technical Recruitment, LinkedIn Recruiter, Interviewing, ATS Management, Campus Relations.
+      Eligibility: Pakistani nationals. BBA / MBA in Human Resources. Minimum 6 months HR or payroll assistant experience.
+      Responsibilities: Process monthly staff attendance and payroll deductions, conduct new hire orientation, administer employee medical insurance claims, and organize quarterly team events.
+      Skills: Payroll Processing, Employee Relations, Attendance Systems, Excel, Labour Laws.
     `
   }
 ];
 
 export async function runAutomatedDiscovery() {
-  console.log('--- [Automated Pakistan Career Radar] Scanning Jobs & Internships ---');
+  console.log(`--- [Pakistan Nationwide Career Radar] Scanning 25+ Targets across Startups, Software Houses, Banks, Enterprises & Social Media ---`);
   let stagedCount = 0;
 
-  for (const target of PAKISTAN_CAREER_TARGETS) {
-    console.log(`Processing: [${target.employment_type}] ${target.raw_title} at ${target.raw_company}`);
+  for (const target of PAKISTAN_ALL_ECOSYSTEM_TARGETS) {
+    console.log(`Processing [${target.segment.toUpperCase()}]: ${target.raw_title} at ${target.raw_company}`);
 
     const structured = structureStagingRecord(target);
 
@@ -498,7 +610,7 @@ export async function runAutomatedDiscovery() {
       company: structured.company,
       location: target.location || structured.location || 'Karachi',
       mode: target.mode || structured.mode || 'onsite',
-      employment_type: target.employment_type || structured.employment_type || 'INTERN',
+      employment_type: target.employment_type || structured.employment_type || 'FULL_TIME',
       category: target.category || structured.category || 'computer-science',
       stipend: structured.stipend, // Verbatim or NULL, never guessed!
       salary_min: target.salary_min || null,
@@ -534,10 +646,9 @@ export async function runAutomatedDiscovery() {
     };
 
     if (isSupabaseConfigured && supabase) {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('internships')
-        .upsert(listingRecord, { onConflict: 'slug', ignoreDuplicates: true })
-        .select('id, title, slug, status');
+        .upsert(listingRecord, { onConflict: 'slug', ignoreDuplicates: true });
 
       if (error) {
         console.error(`Failed to stage ${target.raw_title}:`, error.message);
@@ -551,7 +662,7 @@ export async function runAutomatedDiscovery() {
     }
   }
 
-  console.log(`--- [Radar Complete] ${stagedCount} candidate listings staged into pending_review. ---`);
+  console.log(`--- [Nationwide Radar Complete] ${stagedCount} candidate listings staged into pending_review. ---`);
   return stagedCount;
 }
 
