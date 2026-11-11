@@ -307,6 +307,36 @@ const settings = await getPortalSettings();
       </form>
     </div>
 
+    <!-- Live Real Pakistan Job Feeds Helper -->
+    <div class="mb-8 p-5 sm:p-6 rounded-3xl bg-slate-50 border border-slate-200">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-base">🌐</span>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800">
+          Where Real Daily Openings in Pakistan are Posted (Direct Portals)
+        </h3>
+      </div>
+      <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+        Pakistani companies (banks, software houses, startups) post real day-to-day vacancies on dynamic ATS feeds and job networks. Open any portal below, find a live position, copy its URL, and paste it in the box above to generate a 100% compliant post in 2 seconds:
+      </p>
+      <div class="flex flex-wrap gap-2 text-xs">
+        <a href="https://www.rozee.pk/job/jsearch/q/internship" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-bold text-slate-800 hover:border-emerald-500 hover:text-emerald-700 transition flex items-center gap-1.5 shadow-sm">
+          <span>🔴 Rozee.pk Live Internships ↗</span>
+        </a>
+        <a href="https://www.linkedin.com/jobs/search/?location=Pakistan" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-bold text-slate-800 hover:border-emerald-500 hover:text-emerald-700 transition flex items-center gap-1.5 shadow-sm">
+          <span>🔵 LinkedIn Jobs Pakistan ↗</span>
+        </a>
+        <a href="https://pk.indeed.com/jobs?q=internship&l=Pakistan" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-bold text-slate-800 hover:border-emerald-500 hover:text-emerald-700 transition flex items-center gap-1.5 shadow-sm">
+          <span>🔵 Indeed Pakistan Live ↗</span>
+        </a>
+        <a href="https://www.mustakbil.com/" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-bold text-slate-800 hover:border-emerald-500 hover:text-emerald-700 transition flex items-center gap-1.5 shadow-sm">
+          <span>🟢 Mustakbil.com Pakistan ↗</span>
+        </a>
+        <a href="https://www.facebook.com/search/groups/?q=Pakistan%20Jobs" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl bg-white border border-slate-300 font-bold text-slate-800 hover:border-emerald-500 hover:text-emerald-700 transition flex items-center gap-1.5 shadow-sm">
+          <span>📱 Facebook Hiring Groups ↗</span>
+        </a>
+      </div>
+    </div>
+
     <!-- Review Section Title & Filter Chips -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
       <div>
@@ -320,8 +350,15 @@ const settings = await getPortalSettings();
       <div class="flex items-center gap-2">
         <button
           type="button"
+          id="btn-clear-mock-queue"
+          class="text-xs font-semibold text-rose-600 hover:text-rose-700 flex items-center gap-1 px-3 py-1.5 rounded-lg border border-rose-200 bg-rose-50 transition"
+        >
+          <span>🗑 Clear All Pending Drafts</span>
+        </button>
+        <button
+          type="button"
           id="btn-refresh-queue"
-          class="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50"
+          class="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 bg-emerald-50 transition"
         >
           <span>🔄 Refresh Queue</span>
         </button>
@@ -1250,6 +1287,21 @@ const settings = await getPortalSettings();
         alert(`Nationwide scan complete! Loaded active startups, software houses, banks, and social posts into your queue.`);
       }
       loadQueue();
+    });
+
+    const btnClearMock = document.getElementById('btn-clear-mock-queue');
+    btnClearMock?.addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to clear all pending review drafts? This lets you start fresh with real jobs.')) return;
+      btnClearMock.textContent = 'Clearing...';
+      const { error } = await supabase.from('internships').delete().eq('status', 'pending_review');
+      btnClearMock.textContent = '🗑 Clear All Pending Drafts';
+      if (error) {
+        alert('Failed to clear: ' + error.message);
+      } else {
+        allLoadedItems = [];
+        updateCounts([]);
+        renderFilteredCards();
+      }
     });
 
     btnRefreshQueue?.addEventListener('click', loadQueue);
