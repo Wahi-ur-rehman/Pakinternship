@@ -11,6 +11,7 @@
 
 import { isSupabaseConfigured, supabase } from '../src/lib/supabase';
 import { structureStagingRecord, type RawStagingItem } from './structuring';
+import { buildDirectOrSearchUrl } from '../src/lib/deep_links';
 
 const WAHO_AUTHOR_ID = 'a1000000-0000-0000-0000-000000000001';
 
@@ -597,6 +598,12 @@ export async function runAutomatedDiscovery() {
 
     const structured = structureStagingRecord(target);
 
+    const deepRes = buildDirectOrSearchUrl(
+      target.source_url,
+      target.raw_title || structured.title || '',
+      target.raw_company || structured.company || ''
+    );
+
     // Build complete pending_review record adhering strictly to constraints
     const listingRecord = {
       slug: structured.slug,
@@ -621,13 +628,15 @@ export async function runAutomatedDiscovery() {
       skills: structured.skills || [],
       tips: structured.tips || [],
       intro: structured.intro,
-      source_url: target.source_url,
+      source_url: deepRes.resolvedUrl,
+      direct_apply_url: deepRes.resolvedUrl,
+      is_generic_url_fallback: deepRes.isGenericFallback,
       source_checked_on: new Date().toISOString().split('T')[0],
       status: 'pending_review', // REMAINS PENDING REVIEW! Only Wahi's click publishes it!
       author_id: WAHO_AUTHOR_ID,
       meta_description: structured.meta_description,
       featured: false,
-      direct_apply: false,
+      direct_apply: true,
       company_website: target.company_website,
       company_logo: target.company_logo,
       verified_stipend: false,

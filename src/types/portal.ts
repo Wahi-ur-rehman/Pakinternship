@@ -71,6 +71,8 @@ export interface Listing {
   meta_description: string; // 150-160 chars
   featured: boolean;
   direct_apply?: boolean;
+  direct_apply_url?: string;
+  is_generic_url_fallback?: boolean;
   
   company_website?: string;
   company_logo?: string;

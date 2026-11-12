@@ -466,6 +466,17 @@ const settings = await getPortalSettings();
           <h3 class="text-lg sm:text-xl font-black mt-2 text-white card-title-company">
             Title at Company
           </h3>
+
+          <!-- Generic Career Portal Warning Badge -->
+          <div class="card-warning-badge hidden mt-3 p-3 rounded-2xl bg-amber-500/20 border border-amber-400 text-amber-200 text-xs flex items-start gap-2.5">
+            <span class="text-amber-400 font-black text-sm shrink-0">⚠️</span>
+            <div>
+              <span class="font-bold text-amber-300 block">Warning: Generic Career Portal Link Detected</span>
+              <span class="text-[11px] text-amber-100 leading-tight block mt-0.5">
+                Please supply direct job URL to prevent 404s. An automated search query parameter fallback has been generated.
+              </span>
+            </div>
+          </div>
         </div>
 
         <div>
@@ -484,6 +495,22 @@ const settings = await getPortalSettings();
       <div class="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Left: Details -->
         <div class="space-y-4">
+          <!-- Deep-Link / Direct Apply URL Control -->
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="block text-xs font-bold text-slate-800">
+                🎯 Direct Job Vacancy URL / ATS Endpoint:
+              </label>
+              <span class="card-link-badge text-[10px] font-black uppercase px-2 py-0.5 rounded bg-slate-200 text-slate-700">Checking</span>
+            </div>
+            <input
+              type="url"
+              class="card-apply-url w-full text-xs px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono shadow-sm"
+              placeholder="https://company.com/jobs/specific-slug-or-id"
+            />
+            <p class="text-[11px] text-slate-500 mt-1.5 card-url-status"></p>
+          </div>
+
           <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-2.5 text-xs">
             <div class="flex justify-between">
               <span class="text-slate-500">Compensation:</span>
@@ -584,6 +611,7 @@ const settings = await getPortalSettings();
   <!-- Client-side Interactive Logic -->
   <script>
     import { createClient } from '@supabase/supabase-js';
+    import { isGenericCareerUrl, buildDirectOrSearchUrl, extractDirectApplyChannel } from '../../lib/deep_links';
 
     const supabaseUrl = 'https://dtjfpzbmtwfoljhqglca.supabase.co';
     const anonKey = 'sb_publishable_irmstyJpV7nujH8gX4rQ9w_jkJToUAV';
@@ -688,8 +716,60 @@ const settings = await getPortalSettings();
         const titleComp = clone.querySelector('.card-title-company') as HTMLElement;
         titleComp.textContent = `${item.title} at ${item.company}`;
 
+        const rawDestUrl = item.direct_apply_url || item.source_url || item.company_website || '';
+        const initialRes = buildDirectOrSearchUrl(rawDestUrl, item.title, item.company);
+
         const srcLink = clone.querySelector('.card-source-link') as HTMLAnchorElement;
-        srcLink.href = item.source_url;
+        srcLink.href = initialRes.resolvedUrl;
+        srcLink.target = '_blank';
+        srcLink.rel = 'noopener noreferrer';
+
+        const warningBadge = clone.querySelector('.card-warning-badge') as HTMLElement;
+        const applyInput = clone.querySelector('.card-apply-url') as HTMLInputElement;
+        const linkBadge = clone.querySelector('.card-link-badge') as HTMLElement;
+        const urlStatus = clone.querySelector('.card-url-status') as HTMLElement;
+
+        if (applyInput) {
+          applyInput.value = initialRes.resolvedUrl;
+        }
+
+        const updateLinkDiagnostics = (url: string) => {
+          const res = buildDirectOrSearchUrl(url, item.title, item.company);
+          if (srcLink) {
+            srcLink.href = res.resolvedUrl;
+            srcLink.target = '_blank';
+            srcLink.rel = 'noopener noreferrer';
+          }
+
+          if (res.isGenericFallback) {
+            warningBadge?.classList.remove('hidden');
+            if (linkBadge) {
+              linkBadge.textContent = 'Generic Root Fallback';
+              linkBadge.className = 'card-link-badge text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300';
+            }
+            if (urlStatus) {
+              urlStatus.textContent = '⚠️ Root career portal detected. Pre-filled with automated search query parameter to prevent 404s.';
+              urlStatus.className = 'text-[11px] text-amber-700 font-medium mt-1.5 card-url-status';
+            }
+          } else {
+            warningBadge?.classList.add('hidden');
+            if (linkBadge) {
+              linkBadge.textContent = 'Direct Deep Link ✓';
+              linkBadge.className = 'card-link-badge text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300';
+            }
+            if (urlStatus) {
+              urlStatus.textContent = '✓ Verified deep link directly pointing to job vacancy or ATS form.';
+              urlStatus.className = 'text-[11px] text-emerald-700 font-medium mt-1.5 card-url-status';
+            }
+          }
+          return res;
+        };
+
+        updateLinkDiagnostics(initialRes.resolvedUrl);
+
+        applyInput?.addEventListener('input', () => {
+          updateLinkDiagnostics(applyInput.value.trim());
+        });
 
         // Compensation calculation
         const compEl = clone.querySelector('.card-compensation') as HTMLElement;
@@ -720,8 +800,22 @@ const settings = await getPortalSettings();
         const whatsappText = clone.querySelector('.whatsapp-text') as HTMLTextAreaElement;
         const btnCopyWa = clone.querySelector('.btn-copy-whatsapp') as HTMLButtonElement;
 
-        // Publish Action
+        // Publish Action with Pre-publish Validation Check
         btnPublish.addEventListener('click', async () => {
+          const currentUrl = applyInput?.value.trim() || initialRes.resolvedUrl;
+          const currentRes = buildDirectOrSearchUrl(currentUrl, item.title, item.company);
+
+          // Pre-publish validation check
+          if (currentRes.isGenericFallback) {
+            const proceed = confirm(
+              `⚠️ Warning: Generic Career Portal Link Detected.\n\n` +
+              `The destination URL does not point to a specific job vacancy slug or ID. When candidates search on the target site, they might encounter 404s if the link is not exact.\n\n` +
+              `PakInternships has formatted this with an automated search query parameter fallback:\n${currentRes.resolvedUrl}\n\n` +
+              `Click OK to publish with this search fallback, or Cancel to paste the exact job vacancy permalink first.`
+            );
+            if (!proceed) return;
+          }
+
           btnPublish.disabled = true;
           btnPublish.textContent = 'Publishing to Database...';
 
@@ -730,6 +824,9 @@ const settings = await getPortalSettings();
             .from('internships')
             .update({
               status: 'published',
+              direct_apply_url: currentRes.resolvedUrl,
+              source_url: currentRes.resolvedUrl,
+              is_generic_url_fallback: currentRes.isGenericFallback,
               verified_stipend: true,
               verified_deadline: true,
               verified_nationality: true,
@@ -838,6 +935,8 @@ const settings = await getPortalSettings();
       if (meta_description.length > 155) meta_description = meta_description.substring(0, 152).trim() + '...';
       while (meta_description.length < 120) meta_description += ' Review full prerequisites.';
 
+      const resolvedDirect = buildDirectOrSearchUrl(url, title, company);
+
       const record = {
         slug,
         title,
@@ -865,13 +964,15 @@ const settings = await getPortalSettings();
           `Research recent strategic initiatives and corporate values of ${company} prior to the interview.`
         ],
         intro: `${company} is currently screening candidates for the ${title} opportunity in ${location}. This position provides competitive compensation, professional development, and tangible project ownership within a leading Pakistani organization.`,
-        source_url: url,
+        source_url: resolvedDirect.resolvedUrl,
+        direct_apply_url: resolvedDirect.resolvedUrl,
+        is_generic_url_fallback: resolvedDirect.isGenericFallback,
         source_checked_on: new Date().toISOString().split('T')[0],
         status: 'pending_review',
         author_id: WAHO_AUTHOR_ID,
         meta_description,
         featured: false,
-        direct_apply: false
+        direct_apply: true
       };
 
       const { error } = await supabase.from('internships').upsert(record, { onConflict: 'slug' });
@@ -882,7 +983,11 @@ const settings = await getPortalSettings();
       if (error) {
         alert('Failed to stage listing: ' + error.message + '\n\nTip: Run "ALTER TABLE internships DISABLE ROW LEVEL SECURITY;" in Supabase SQL editor.');
       } else {
-        alert(`✓ "${title}" at ${company} has been structured and staged to your review queue!`);
+        if (resolvedDirect.isGenericFallback) {
+          alert(`✓ "${title}" staged with automated ATS search query fallback to prevent 404s!`);
+        } else {
+          alert(`✓ "${title}" at ${company} staged with verified deep-link!`);
+        }
         fastIngestForm.reset();
         loadQueue();
       }
@@ -904,23 +1009,15 @@ const settings = await getPortalSettings();
       const inputApplyUrl = (document.getElementById('social-apply-url') as HTMLInputElement)?.value.trim() || '';
       const inputHrEmail = (document.getElementById('social-hr-email') as HTMLInputElement)?.value.trim() || '';
 
-      // Auto-extract email or direct link from caption or inputs
-      const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i;
-      const extractedEmail = inputHrEmail || caption.match(emailRegex)?.[1] || '';
-      
-      const linkRegex = /(https?:\/\/[^\s]+)/gi;
-      const linksFound = caption.match(linkRegex) || [];
-      const nonSocialLink = linksFound.find(l => !/instagram\.com|facebook\.com/i.test(l)) || '';
-      const extractedApplyUrl = inputApplyUrl || nonSocialLink;
+      // Extract direct apply channel & enforce deep-link / ATS search fallback
+      const channelResult = extractDirectApplyChannel(caption, inputApplyUrl, inputHrEmail);
+      let officialApplyChannel = channelResult.directApplyUrl;
+      let isGenericFallback = channelResult.isGenericFallback;
 
-      // Ensure candidates NEVER get sent to Instagram/Facebook!
-      let officialApplyChannel = '';
-      if (extractedApplyUrl && !/instagram\.com|facebook\.com/i.test(extractedApplyUrl)) {
-        officialApplyChannel = extractedApplyUrl;
-      } else if (extractedEmail) {
-        officialApplyChannel = `mailto:${extractedEmail}`;
-      } else {
-        officialApplyChannel = `mailto:careers@${company.toLowerCase().replace(/[^a-z0-9]/g, '')}.pk`;
+      if (!officialApplyChannel) {
+        const fallbackRes = buildDirectOrSearchUrl(url, title, company);
+        officialApplyChannel = fallbackRes.resolvedUrl;
+        isGenericFallback = fallbackRes.isGenericFallback;
       }
 
       const slug = `${title}-${company}-2026`
@@ -958,10 +1055,12 @@ const settings = await getPortalSettings();
           `Keep your introductory message concise, polite, and directly address the requirements in the post.`,
           `Be prepared to provide 1-2 professional references or complete a small trial task.`
         ],
-        intro: extractedEmail
-          ? `${company} is currently inviting applications for the ${title} role in ${location}. Sourced from official hiring announcements, candidates can apply directly by emailing their resume to ${extractedEmail}.`
+        intro: channelResult.hrEmail
+          ? `${company} is currently inviting applications for the ${title} role in ${location}. Sourced from official hiring announcements, candidates can apply directly by emailing their resume to ${channelResult.hrEmail}.`
           : `${company} is currently inviting applications for the ${title} role in ${location}. Full details and application channels are confirmed from official hiring channels.`,
         source_url: officialApplyChannel,
+        direct_apply_url: officialApplyChannel,
+        is_generic_url_fallback: isGenericFallback,
         source_checked_on: new Date().toISOString().split('T')[0],
         status: 'pending_review',
         author_id: WAHO_AUTHOR_ID,
@@ -1273,6 +1372,8 @@ const settings = await getPortalSettings();
         if (meta_description.length > 155) meta_description = meta_description.substring(0, 152).trim() + '...';
         while (meta_description.length < 120) meta_description += ' Review full prerequisites.';
 
+        const deepRes = buildDirectOrSearchUrl(t.url, t.title, t.company);
+
         const record = {
           slug,
           title: t.title,
@@ -1304,13 +1405,15 @@ const settings = await getPortalSettings();
             `Prepare structured STAR examples demonstrating how you tackled technical or operational hurdles.`
           ],
           intro: `${t.company} is accepting applications for the ${t.title} position in ${t.loc}. Sourced from official Pakistan career portals and verified hiring channels, this role offers competitive compensation and career growth pathways.`,
-          source_url: t.url,
+          source_url: deepRes.resolvedUrl,
+          direct_apply_url: deepRes.resolvedUrl,
+          is_generic_url_fallback: deepRes.isGenericFallback,
           source_checked_on: new Date().toISOString().split('T')[0],
           status: 'pending_review',
           author_id: WAHO_AUTHOR_ID,
           meta_description,
           featured: false,
-          direct_apply: false
+          direct_apply: true
         };
 
         const { error } = await supabase.from('internships').upsert(record, { onConflict: 'slug', ignoreDuplicates: true });

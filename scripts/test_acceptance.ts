@@ -9,6 +9,7 @@ import { SEED_LISTINGS, SEED_AUTHORS, SEED_SETTINGS } from '../src/lib/supabase'
 import { generateJobPostingSchema } from '../src/lib/schema';
 import { generateWhatsAppShareMessage } from '../src/lib/whatsapp';
 import { runAdSenseAudit } from '../src/lib/adsense';
+import { isGenericCareerUrl, buildDirectOrSearchUrl } from '../src/lib/deep_links';
 
 console.log('================================================================');
 console.log('AUTOMATED ACCEPTANCE CRITERIA VERIFICATION SUITE');
@@ -168,6 +169,23 @@ assert(
   'WhatsApp Share Generator produces compliant, hype-free message pointing to site URL',
   hasCorrectStructure,
   waMessage
+);
+
+// Criterion 12: Direct Job URL Resolution & Deep-Linking (Rejection of generic portal roots & search fallback)
+const genericRoot = 'https://systemsltd.com/careers';
+const deepAtsUrl = 'https://apply.workable.com/devsinc/j/3817492A7C/';
+const socialFlyerUrl = 'https://www.instagram.com/p/DB12345/';
+
+const isGenericCorrect = isGenericCareerUrl(genericRoot) === true;
+const isDeepCorrect = isGenericCareerUrl(deepAtsUrl) === false;
+const searchFallback = buildDirectOrSearchUrl(genericRoot, 'Associate Software Engineer', 'Systems Limited');
+const socialReplaced = buildDirectOrSearchUrl(socialFlyerUrl, 'UI Designer', 'Studio').resolvedUrl.includes('rozee.pk');
+
+const criterion12Passed = isGenericCorrect && isDeepCorrect && searchFallback.isGenericFallback && searchFallback.resolvedUrl.includes('search=Associate') && socialReplaced;
+assert(
+  'Direct Job URL Resolution & Deep-Linking (Generic root rejection & automated ATS search query fallback)',
+  criterion12Passed,
+  `Generic root detected: ${isGenericCorrect}, Deep ATS kept: ${isDeepCorrect}, Search query attached: ${searchFallback.resolvedUrl}, Social domain replaced: ${socialReplaced}`
 );
 
 console.log('\n================================================================');

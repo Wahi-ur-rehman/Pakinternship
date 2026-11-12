@@ -10,6 +10,7 @@
 // ==============================================================================
 
 import { isSupabaseConfigured, supabase } from '../src/lib/supabase';
+import { buildDirectOrSearchUrl } from '../src/lib/deep_links';
 import type { Listing } from '../src/types/portal';
 
 export interface RawStagingItem {
@@ -92,6 +93,8 @@ export function structureStagingRecord(staging: RawStagingItem): Partial<Listing
     meta_description += ' Review full prerequisites.';
   }
 
+  const deepRes = buildDirectOrSearchUrl(staging.source_url, title, company);
+
   return {
     slug: baseSlug,
     title,
@@ -110,12 +113,15 @@ export function structureStagingRecord(staging: RawStagingItem): Partial<Listing
     skills,
     tips,
     intro,
-    source_url: staging.source_url,
+    source_url: deepRes.resolvedUrl,
+    direct_apply_url: deepRes.resolvedUrl,
+    is_generic_url_fallback: deepRes.isGenericFallback,
     source_checked_on: new Date().toISOString().slice(0, 10),
     status: 'pending_review', // REMAINS IN PENDING REVIEW: BLOCKED FROM PUBLISHING WITHOUT HUMAN GATE
     author_id: 'a1000000-0000-0000-0000-000000000001',
     meta_description,
     featured: false,
+    direct_apply: true,
     verified_stipend: false,
     verified_deadline: false,
     verified_nationality: false,

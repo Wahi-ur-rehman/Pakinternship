@@ -8,6 +8,7 @@ import Layout from '../../layouts/Layout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import { getOpenAndClosedListings, getAuthorById } from '../../lib/supabase';
 import { generateJobPostingSchema } from '../../lib/schema';
+import { buildDirectOrSearchUrl } from '../../lib/deep_links';
 import type { Listing, Author } from '../../types/portal';
 
 export async function getStaticPaths() {
@@ -71,6 +72,7 @@ const jsonLd = generateJobPostingSchema(listing);
 // Identify Application Channels: Portal Link vs HR Email
 const rawSource = listing.source_url || '';
 const rawWebsite = listing.company_website || '';
+const rawDirectApply = listing.direct_apply_url || '';
 
 // Detect direct HR email in source_url, company_website, or intro
 const isMailtoSource = rawSource.startsWith('mailto:');
@@ -79,16 +81,12 @@ const detectedEmail = isMailtoSource
   ? rawSource.replace(/^mailto:/i, '').split('?')[0].trim()
   : (rawSource.match(emailRegex)?.[1] || rawWebsite.match(emailRegex)?.[1] || (listing.intro || '').match(emailRegex)?.[1] || null);
 
-// Detect Direct Online Apply Link (ATS, Career Portal, Form)
+// Detect & Resolve Deep Online Apply Link (ATS, Direct Job Vacancy URL, Form, or Search Query URL)
 // Rule: NEVER redirect candidate to instagram.com or facebook.com!
-let directApplyUrl = '';
-if (!isMailtoSource) {
-  if (rawSource && !/instagram\.com|facebook\.com/i.test(rawSource)) {
-    directApplyUrl = rawSource;
-  } else if (rawWebsite && !/instagram\.com|facebook\.com/i.test(rawWebsite)) {
-    directApplyUrl = rawWebsite;
-  }
-}
+const candidateApplyUrl = rawDirectApply || (!isMailtoSource ? rawSource || rawWebsite : '');
+const deepLinkResult = candidateApplyUrl ? buildDirectOrSearchUrl(candidateApplyUrl, listing.title, listing.company) : null;
+const directApplyUrl = deepLinkResult ? deepLinkResult.resolvedUrl : '';
+const isGenericFallback = deepLinkResult ? deepLinkResult.isGenericFallback : false;
 ---
 
 <Layout
@@ -329,6 +327,15 @@ if (!isMailtoSource) {
               </a>
             )}
           </div>
+
+          {isGenericFallback && directApplyUrl && (
+            <div class="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 max-w-lg text-left">
+              <span class="font-bold flex items-center gap-1 text-amber-900 mb-0.5">
+                <span>🔍</span> Pre-Filtered Search Query Active
+              </span>
+              <span>This link automatically queries the employer's portal for <strong>"{listing.title}"</strong>. If prompted, click the matching title to view the official vacancy.</span>
+            </div>
+          )}
 
           {detectedEmail && (
             <div class="mt-2 text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 max-w-lg">
