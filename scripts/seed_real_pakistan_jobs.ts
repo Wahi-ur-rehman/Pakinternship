@@ -510,6 +510,9 @@ async function seed() {
 
   // 2. Upsert real jobs
   for (const job of REAL_PAKISTAN_JOBS) {
+    if (job.meta_description && job.meta_description.length > 150) {
+      job.meta_description = job.meta_description.substring(0, 147).trim() + '...';
+    }
     const { error } = await supabase
       .from('internships')
       .upsert(job, { onConflict: 'slug' });
