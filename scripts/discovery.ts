@@ -629,8 +629,6 @@ export async function runAutomatedDiscovery() {
       tips: structured.tips || [],
       intro: structured.intro,
       source_url: deepRes.resolvedUrl,
-      direct_apply_url: deepRes.resolvedUrl,
-      is_generic_url_fallback: deepRes.isGenericFallback,
       source_checked_on: new Date().toISOString().split('T')[0],
       status: 'pending_review', // REMAINS PENDING REVIEW! Only Wahi's click publishes it!
       author_id: WAHO_AUTHOR_ID,

@@ -72,7 +72,6 @@ const jsonLd = generateJobPostingSchema(listing);
 // Identify Application Channels: Portal Link vs HR Email
 const rawSource = listing.source_url || '';
 const rawWebsite = listing.company_website || '';
-const rawDirectApply = listing.direct_apply_url || '';
 
 // Detect direct HR email in source_url, company_website, or intro
 const isMailtoSource = rawSource.startsWith('mailto:');
@@ -83,7 +82,7 @@ const detectedEmail = isMailtoSource
 
 // Detect & Resolve Deep Online Apply Link (ATS, Direct Job Vacancy URL, Form, or Search Query URL)
 // Rule: NEVER redirect candidate to instagram.com or facebook.com!
-const candidateApplyUrl = rawDirectApply || (!isMailtoSource ? rawSource || rawWebsite : '');
+const candidateApplyUrl = !isMailtoSource ? rawSource || rawWebsite : '';
 const deepLinkResult = candidateApplyUrl ? buildDirectOrSearchUrl(candidateApplyUrl, listing.title, listing.company) : null;
 const directApplyUrl = deepLinkResult ? deepLinkResult.resolvedUrl : '';
 const isGenericFallback = deepLinkResult ? deepLinkResult.isGenericFallback : false;
@@ -331,9 +330,9 @@ const isGenericFallback = deepLinkResult ? deepLinkResult.isGenericFallback : fa
           {isGenericFallback && directApplyUrl && (
             <div class="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 max-w-lg text-left">
               <span class="font-bold flex items-center gap-1 text-amber-900 mb-0.5">
-                <span>🔍</span> Pre-Filtered Search Query Active
+                <span>🏢</span> Official Employer Career Portal
               </span>
-              <span>This link automatically queries the employer's portal for <strong>"{listing.title}"</strong>. If prompted, click the matching title to view the official vacancy.</span>
+              <span>This link opens <strong>{listing.company}</strong>'s official careers portal. Browse the active vacancies list or search for <em>"{listing.title}"</em> to complete your application.</span>
             </div>
           )}
 

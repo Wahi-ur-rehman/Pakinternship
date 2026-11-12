@@ -114,8 +114,6 @@ export function structureStagingRecord(staging: RawStagingItem): Partial<Listing
     tips,
     intro,
     source_url: deepRes.resolvedUrl,
-    direct_apply_url: deepRes.resolvedUrl,
-    is_generic_url_fallback: deepRes.isGenericFallback,
     source_checked_on: new Date().toISOString().slice(0, 10),
     status: 'pending_review', // REMAINS IN PENDING REVIEW: BLOCKED FROM PUBLISHING WITHOUT HUMAN GATE
     author_id: 'a1000000-0000-0000-0000-000000000001',

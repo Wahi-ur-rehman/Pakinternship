@@ -716,7 +716,7 @@ const settings = await getPortalSettings();
         const titleComp = clone.querySelector('.card-title-company') as HTMLElement;
         titleComp.textContent = `${item.title} at ${item.company}`;
 
-        const rawDestUrl = item.direct_apply_url || item.source_url || item.company_website || '';
+        const rawDestUrl = item.source_url || item.company_website || '';
         const initialRes = buildDirectOrSearchUrl(rawDestUrl, item.title, item.company);
 
         const srcLink = clone.querySelector('.card-source-link') as HTMLAnchorElement;
@@ -824,9 +824,9 @@ const settings = await getPortalSettings();
             .from('internships')
             .update({
               status: 'published',
-              direct_apply_url: currentRes.resolvedUrl,
               source_url: currentRes.resolvedUrl,
-              is_generic_url_fallback: currentRes.isGenericFallback,
+              company_website: currentRes.resolvedUrl,
+              direct_apply: true,
               verified_stipend: true,
               verified_deadline: true,
               verified_nationality: true,
@@ -965,8 +965,7 @@ const settings = await getPortalSettings();
         ],
         intro: `${company} is currently screening candidates for the ${title} opportunity in ${location}. This position provides competitive compensation, professional development, and tangible project ownership within a leading Pakistani organization.`,
         source_url: resolvedDirect.resolvedUrl,
-        direct_apply_url: resolvedDirect.resolvedUrl,
-        is_generic_url_fallback: resolvedDirect.isGenericFallback,
+        company_website: resolvedDirect.resolvedUrl,
         source_checked_on: new Date().toISOString().split('T')[0],
         status: 'pending_review',
         author_id: WAHO_AUTHOR_ID,
@@ -1059,15 +1058,13 @@ const settings = await getPortalSettings();
           ? `${company} is currently inviting applications for the ${title} role in ${location}. Sourced from official hiring announcements, candidates can apply directly by emailing their resume to ${channelResult.hrEmail}.`
           : `${company} is currently inviting applications for the ${title} role in ${location}. Full details and application channels are confirmed from official hiring channels.`,
         source_url: officialApplyChannel,
-        direct_apply_url: officialApplyChannel,
-        is_generic_url_fallback: isGenericFallback,
+        company_website: !/instagram\.com|facebook\.com/i.test(url) ? url : '',
         source_checked_on: new Date().toISOString().split('T')[0],
         status: 'pending_review',
         author_id: WAHO_AUTHOR_ID,
         meta_description,
         featured: false,
-        direct_apply: true,
-        company_website: !/instagram\.com|facebook\.com/i.test(url) ? url : ''
+        direct_apply: true
       };
 
       const { error } = await supabase.from('internships').upsert(record, { onConflict: 'slug' });
@@ -1365,6 +1362,7 @@ const settings = await getPortalSettings();
 
       let added = 0;
       let errorOccurred = false;
+      let lastErrorMessage = '';
 
       for (const t of targets) {
         const slug = `${t.title}-${t.company}-2026`.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
@@ -1406,8 +1404,7 @@ const settings = await getPortalSettings();
           ],
           intro: `${t.company} is accepting applications for the ${t.title} position in ${t.loc}. Sourced from official Pakistan career portals and verified hiring channels, this role offers competitive compensation and career growth pathways.`,
           source_url: deepRes.resolvedUrl,
-          direct_apply_url: deepRes.resolvedUrl,
-          is_generic_url_fallback: deepRes.isGenericFallback,
+          company_website: t.url,
           source_checked_on: new Date().toISOString().split('T')[0],
           status: 'pending_review',
           author_id: WAHO_AUTHOR_ID,
@@ -1419,6 +1416,7 @@ const settings = await getPortalSettings();
         const { error } = await supabase.from('internships').upsert(record, { onConflict: 'slug', ignoreDuplicates: true });
         if (error) {
           errorOccurred = true;
+          lastErrorMessage = error.message;
           console.error('Insert error for:', t.title, error.message);
         } else {
           added++;
@@ -1430,9 +1428,9 @@ const settings = await getPortalSettings();
 
       if (errorOccurred && added === 0) {
         queueRlsHelp?.classList.remove('hidden');
-        alert('Notice: Supabase Row-Level Security blocked inserting rows. Please run the 1-line SQL shown in the yellow box to unlock!');
+        alert(`Notice: Database insert failed: ${lastErrorMessage}\n\nIf this mentions RLS permissions, please run the SQL shown in the yellow box.`);
       } else {
-        alert(`Nationwide scan complete! Loaded active startups, software houses, banks, and social posts into your queue.`);
+        alert(`Nationwide scan complete! Loaded ${added} active startups, software houses, banks, and social posts into your queue.`);
       }
       loadQueue();
     });
