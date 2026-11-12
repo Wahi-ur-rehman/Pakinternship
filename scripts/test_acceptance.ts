@@ -171,21 +171,22 @@ assert(
   waMessage
 );
 
-// Criterion 12: Direct Job URL Resolution & Deep-Linking (Rejection of generic portal roots & search fallback)
+// Criterion 12: Direct Job URL Resolution & Deep-Linking (Rejection of generic portal roots & safe fallback)
 const genericRoot = 'https://systemsltd.com/careers';
 const deepAtsUrl = 'https://apply.workable.com/devsinc/j/3817492A7C/';
 const socialFlyerUrl = 'https://www.instagram.com/p/DB12345/';
 
 const isGenericCorrect = isGenericCareerUrl(genericRoot) === true;
 const isDeepCorrect = isGenericCareerUrl(deepAtsUrl) === false;
-const searchFallback = buildDirectOrSearchUrl(genericRoot, 'Associate Software Engineer', 'Systems Limited');
+const portalFallback = buildDirectOrSearchUrl(genericRoot, 'Associate Software Engineer', 'Systems Limited');
 const socialReplaced = buildDirectOrSearchUrl(socialFlyerUrl, 'UI Designer', 'Studio').resolvedUrl.includes('rozee.pk');
+const isCleanPortal = portalFallback.resolvedUrl === 'https://systemsltd.com/careers';
 
-const criterion12Passed = isGenericCorrect && isDeepCorrect && searchFallback.isGenericFallback && searchFallback.resolvedUrl.includes('search=Associate') && socialReplaced;
+const criterion12Passed = isGenericCorrect && isDeepCorrect && portalFallback.isGenericFallback && isCleanPortal && socialReplaced;
 assert(
-  'Direct Job URL Resolution & Deep-Linking (Generic root rejection & automated ATS search query fallback)',
+  'Direct Job URL Resolution & Deep-Linking (Generic root rejection & safe fallback)',
   criterion12Passed,
-  `Generic root detected: ${isGenericCorrect}, Deep ATS kept: ${isDeepCorrect}, Search query attached: ${searchFallback.resolvedUrl}, Social domain replaced: ${socialReplaced}`
+  `Generic root detected: ${isGenericCorrect}, Deep ATS kept: ${isDeepCorrect}, Safe portal URL: ${portalFallback.resolvedUrl}, Social domain replaced: ${socialReplaced}`
 );
 
 console.log('\n================================================================');

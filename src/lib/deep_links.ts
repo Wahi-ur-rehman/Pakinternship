@@ -128,36 +128,28 @@ export function buildDirectOrSearchUrl(
     };
   }
 
-  // Construct search parameter query for target ATS / career portal
-  const encodedQuery = encodeURIComponent(title.trim());
+  // If the target is a known company portal, keep the clean career portal path
+  // NEVER append long arbitrary titles into company ATS search bars that return "No jobs found"!
   let enhancedUrl = cleanUrl;
-
   try {
     const parsed = new URL(cleanUrl.startsWith('http') ? cleanUrl : `https://${cleanUrl}`);
     const host = parsed.hostname.toLowerCase();
 
+    // Aggregators with broad search capability
     if (host.includes('rozee.pk')) {
-      enhancedUrl = `https://www.rozee.pk/job/jardinsearch/q/${encodedQuery}`;
+      const simplifiedQuery = encodeURIComponent(title.split(/[\s(&/-]+/)[0] || 'internship');
+      enhancedUrl = `https://www.rozee.pk/job/jardinsearch/q/${simplifiedQuery}`;
     } else if (host.includes('mustakbil.com')) {
-      enhancedUrl = `https://www.mustakbil.com/jobs/search?q=${encodedQuery}`;
-    } else if (host.includes('jazzworld.com.pk') || host.includes('jobs.jazz.com.pk')) {
-      enhancedUrl = `https://careers.jazzworld.com.pk/search/?q=${encodedQuery}`;
-    } else if (host.includes('systemsltd.com')) {
-      enhancedUrl = `https://systemsltd.com/careers?search=${encodedQuery}`;
-    } else if (host.includes('nayapay.com')) {
-      enhancedUrl = `https://www.nayapay.com/careers/?role=${encodedQuery}`;
-    } else if (host.includes('meezanbank.com')) {
-      enhancedUrl = `https://www.meezanbank.com/careers/?search=${encodedQuery}`;
-    } else if (host.includes('workable.com')) {
-      parsed.searchParams.set('search', title.trim());
-      enhancedUrl = parsed.toString();
+      const simplifiedQuery = encodeURIComponent(title.split(/[\s(&/-]+/)[0] || 'internship');
+      enhancedUrl = `https://www.mustakbil.com/jobs/search?q=${simplifiedQuery}`;
     } else {
-      // General career portal search query attachment
-      const separator = parsed.search ? '&' : '?';
-      enhancedUrl = `${parsed.origin}${parsed.pathname.replace(/\/+$/, '')}${separator}search=${encodedQuery}`;
+      // For enterprise company career sites (FFC, Systems Ltd, Meezan, Jazz, etc.)
+      // DO NOT append arbitrary long search strings that cause "No jobs found" errors.
+      // Retain the clean, official career endpoint where candidates can browse all live openings.
+      enhancedUrl = cleanUrl.split('?')[0];
     }
   } catch {
-    enhancedUrl = `${cleanUrl}?search=${encodedQuery}`;
+    enhancedUrl = cleanUrl;
   }
 
   return {
