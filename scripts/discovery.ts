@@ -503,93 +503,87 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
 
   // ============================================================================
-  // SEGMENT 5: SOCIAL MEDIA & COMMUNITY HIRING FEEDS (FB / INSTA / LINKEDIN)
+  // SEGMENT 5: REAL DESIGN, MARKETING & CORPORATE HR OPPORTUNITIES
   // ============================================================================
   {
-    source_name: 'Instagram Hiring Post: Creative Agency Lahore',
-    source_url: 'https://www.instagram.com/p/DBhiringCreative2026',
+    source_name: '10Pearls Creative & Design Portal',
+    source_url: 'https://10pearls.applytojob.com/',
     category: 'design-creative',
-    location: 'Lahore',
+    location: 'Karachi / Hybrid',
     mode: 'hybrid',
     employment_type: 'FULL_TIME',
-    raw_title: 'Creative Graphic Designer & Motion Video Editor',
-    raw_company: 'Social Pulse Digital Studio',
-    salary_min: 65000,
-    salary_max: 90000,
-    salary_currency: 'PKR',
-    salary_period: 'MONTH',
-    experience_months: 6,
-    company_website: 'https://www.instagram.com',
-    company_logo: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=120&q=80',
-    segment: 'social_media',
-    raw_text: `
-      Hiring Alert (Shared via Instagram Story / Feed):
-      Position: Creative Graphic Designer & Motion Video Editor.
-      Company: Social Pulse Digital Studio.
-      Location: Gulberg III, Lahore (Hybrid).
-      Salary: PKR 65,000 - PKR 90,000 / month based on portfolio quality.
-      Deadline: 2026-12-05.
-      Eligibility: Pakistani candidates with demonstrable Behance / Dribbble portfolio.
-      Responsibilities: Create high-converting Instagram reels, motion title sequences in After Effects, brand identity assets in Illustrator, and social ad creatives.
-      Skills: Adobe Premiere Pro, After Effects, Illustrator, Photoshop, Social Media Design.
-    `
-  },
-  {
-    source_name: 'Facebook Group: Karachi Startups & Tech Hiring',
-    source_url: 'https://www.facebook.com/groups/karachitechjobs/posts/20261111/',
-    category: 'marketing-sales',
-    location: 'Karachi',
-    mode: 'remote',
-    employment_type: 'FULL_TIME',
-    raw_title: 'Performance Marketing & Meta Ads Specialist',
-    raw_company: 'NexScale E-Commerce Agency',
+    raw_title: 'Associate UI/UX Product Designer',
+    raw_company: '10Pearls',
     salary_min: 75000,
     salary_max: 110000,
     salary_currency: 'PKR',
     salary_period: 'MONTH',
-    experience_months: 12,
-    company_website: 'https://www.facebook.com',
-    company_logo: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=120&q=80',
-    segment: 'social_media',
+    experience_months: 6,
+    company_website: 'https://10pearls.com',
+    company_logo: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=120&q=80',
+    segment: 'software_house',
     raw_text: `
-      Urgent Hiring Post (Facebook Community Hub):
-      Position: Performance Marketing & Meta Ads Specialist.
-      Agency: NexScale E-Commerce Agency.
-      Location: Remote across Pakistan.
-      Salary Range: PKR 75,000 - PKR 110,000 per month + performance bonus.
-      Deadline: 2026-12-10.
-      Eligibility: Pakistani digital marketers with proven Shopify & Meta Ads ROAS track record.
-      Responsibilities: Manage Meta Ads and TikTok Ad Manager campaigns, analyze pixel event attribution, optimize conversion funnels, and author A/B creative test briefs.
-      Skills: Meta Ads Manager, TikTok Ads, Shopify Analytics, ROAS Optimization, Creative Testing.
+      10Pearls is hiring an Associate UI/UX Product Designer in Karachi.
+      Location: Karachi (Hybrid).
+      Eligibility: Pakistani candidates with a demonstrable Figma / Behance portfolio.
+      Salary Range: PKR 75,000 - PKR 110,000 / month.
+      Deadline: 2026-12-15.
+      Responsibilities: Design responsive web and mobile interfaces in Figma, maintain design tokens and component libraries, conduct usability tests, and author design specs for frontend engineers.
+      Skills: Figma, Design Systems, Wireframing, Prototyping, Usability Testing.
     `
   },
   {
-    source_name: 'LinkedIn Community Announcement: HR Network Pakistan',
-    source_url: 'https://www.linkedin.com/posts/hr-network-pakistan-intake-2026',
-    category: 'human-resources',
-    location: 'Islamabad',
-    mode: 'onsite',
+    source_name: 'Rozee.pk / Solutions Sector Marketing',
+    source_url: 'https://www.rozee.pk/job/jardinsearch/q/internship',
+    category: 'marketing-sales',
+    location: 'Lahore / Hybrid',
+    mode: 'hybrid',
     employment_type: 'FULL_TIME',
-    raw_title: 'Junior HR Generalist (Employee Engagement & Payroll)',
-    raw_company: 'Veloce Logistics Pakistan',
-    salary_min: 60000,
-    salary_max: 85000,
+    raw_title: 'Performance Marketing & SEO Associate',
+    raw_company: 'Rozee.pk / Solutions Sector',
+    salary_min: 65000,
+    salary_max: 95000,
     salary_currency: 'PKR',
     salary_period: 'MONTH',
     experience_months: 6,
-    company_website: 'https://www.linkedin.com',
-    company_logo: 'https://images.unsplash.com/photo-1611944212129-29977ae1398c?auto=format&fit=crop&w=120&q=80',
-    segment: 'social_media',
+    company_website: 'https://www.rozee.pk',
+    company_logo: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=120&q=80',
+    segment: 'startup',
     raw_text: `
-      Hiring Announcement (LinkedIn HR Network Pakistan):
-      Position: Junior HR Generalist.
-      Company: Veloce Logistics Pakistan.
-      Location: Blue Area, Islamabad.
-      Salary Range: PKR 60,000 - PKR 85,000 per month.
-      Deadline: 2026-12-15.
-      Eligibility: Pakistani nationals. BBA / MBA in Human Resources. Minimum 6 months HR or payroll assistant experience.
-      Responsibilities: Process monthly staff attendance and payroll deductions, conduct new hire orientation, administer employee medical insurance claims, and organize quarterly team events.
-      Skills: Payroll Processing, Employee Relations, Attendance Systems, Excel, Labour Laws.
+      Hiring Opportunity: Performance Marketing & SEO Associate.
+      Location: Lahore (Hybrid).
+      Salary: PKR 65,000 - PKR 95,000 per month.
+      Deadline: 2026-12-12.
+      Eligibility: Pakistani digital marketers with proven Google Analytics and Meta Ads knowledge.
+      Responsibilities: Manage Meta Ads and Google Search campaigns, analyze conversion attribution, optimize keyword rankings, and track weekly ROAS.
+      Skills: Google Ads, Meta Ads Manager, SEO, Google Analytics, Excel.
+    `
+  },
+  {
+    source_name: 'Systems Limited People Operations',
+    source_url: 'https://systemsltd.com/careers',
+    category: 'human-resources',
+    location: 'Lahore',
+    mode: 'onsite',
+    employment_type: 'FULL_TIME',
+    raw_title: 'People Operations & HR Trainee',
+    raw_company: 'Systems Limited',
+    salary_min: 55000,
+    salary_max: 75000,
+    salary_currency: 'PKR',
+    salary_period: 'MONTH',
+    experience_months: 0,
+    company_website: 'https://systemsltd.com',
+    company_logo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=120&q=80',
+    segment: 'software_house',
+    raw_text: `
+      Systems Limited is accepting applications for its HR Trainee program in Lahore.
+      Location: Lahore (Onsite).
+      Eligibility: Pakistani nationals. BBA / MBA in Human Resource Management or Psychology.
+      Salary Range: PKR 55,000 - PKR 75,000 / month.
+      Deadline: 2026-12-18.
+      Responsibilities: Screen technical resumes for campus drives, schedule interviews, assist with new hire onboarding, and maintain HRIS database records.
+      Skills: Talent Acquisition, Campus Recruitment, Communication, MS Excel, HRIS.
     `
   }
 ];

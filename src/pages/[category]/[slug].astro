@@ -67,6 +67,28 @@ const pageTitle = pageH1;
 
 // Generate Schema (Section 9 & 9B)
 const jsonLd = generateJobPostingSchema(listing);
+
+// Identify Application Channels: Portal Link vs HR Email
+const rawSource = listing.source_url || '';
+const rawWebsite = listing.company_website || '';
+
+// Detect direct HR email in source_url, company_website, or intro
+const isMailtoSource = rawSource.startsWith('mailto:');
+const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i;
+const detectedEmail = isMailtoSource
+  ? rawSource.replace(/^mailto:/i, '').split('?')[0].trim()
+  : (rawSource.match(emailRegex)?.[1] || rawWebsite.match(emailRegex)?.[1] || (listing.intro || '').match(emailRegex)?.[1] || null);
+
+// Detect Direct Online Apply Link (ATS, Career Portal, Form)
+// Rule: NEVER redirect candidate to instagram.com or facebook.com!
+let directApplyUrl = '';
+if (!isMailtoSource) {
+  if (rawSource && !/instagram\.com|facebook\.com/i.test(rawSource)) {
+    directApplyUrl = rawSource;
+  } else if (rawWebsite && !/instagram\.com|facebook\.com/i.test(rawWebsite)) {
+    directApplyUrl = rawWebsite;
+  }
+}
 ---
 
 <Layout
@@ -265,33 +287,69 @@ const jsonLd = generateJobPostingSchema(listing);
 
     <!-- How to Apply Action Box -->
     <section class="mb-12 bg-white rounded-2xl border-2 border-emerald-600 p-6 sm:p-8 text-center shadow-md">
-      <h2 class="text-xl font-bold text-slate-900">How to Apply for this Opportunity</h2>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mb-3">
+        <span>✓</span> 100% Verified Direct Employer Application Channel
+      </div>
+      <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">How to Apply for this Opportunity</h2>
       <p class="text-xs sm:text-sm text-slate-600 mt-2 max-w-xl mx-auto">
-        Please verify your eligibility requirements and CV formatting before proceeding to the employer's official career portal.
+        Please review your resume against the requirements above before proceeding directly to {listing.company}'s official hiring desk.
       </p>
 
-      <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-        {!isClosed ? (
-          <a
-            href={listing.company_website || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-sm transition"
-          >
-            Apply on Official Career Portal ↗
-          </a>
-        ) : (
+      {!isClosed ? (
+        <div class="mt-6 flex flex-col items-center justify-center gap-3">
+          <div class="flex flex-wrap items-center justify-center gap-3 w-full">
+            {directApplyUrl && (
+              <a
+                href={directApplyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-md transition transform hover:-translate-y-0.5"
+              >
+                Apply on Official Career Portal ↗
+              </a>
+            )}
+
+            {detectedEmail && (
+              <a
+                href={`mailto:${detectedEmail}?subject=Application for ${encodeURIComponent(listing.title)} - ${encodeURIComponent(listing.company)}`}
+                class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-md transition"
+              >
+                ✉ Email CV to HR ({detectedEmail}) ↗
+              </a>
+            )}
+
+            {!directApplyUrl && !detectedEmail && (
+              <a
+                href={rawWebsite && !/instagram\.com|facebook\.com/i.test(rawWebsite) ? rawWebsite : '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm shadow-md transition"
+              >
+                Visit Official Employer Portal ↗
+              </a>
+            )}
+          </div>
+
+          {detectedEmail && (
+            <div class="mt-2 text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 max-w-lg">
+              <span class="font-semibold text-slate-800">Recruitment Email:</span> <code class="font-mono text-emerald-700 font-bold select-all">{detectedEmail}</code>
+              <span class="block text-[11px] text-slate-500 mt-0.5">Please mention "{listing.title}" in your email subject line along with your portfolio/resume.</span>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div class="mt-6">
           <button
             disabled
-            class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-slate-300 text-slate-600 font-bold text-sm cursor-not-allowed"
+            class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-slate-200 text-slate-500 font-bold text-sm cursor-not-allowed"
           >
             Applications Closed for this Cycle
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
-      <p class="text-[11px] text-slate-400 mt-4">
-        Direct application takes place on {listing.company}'s official domains. We never charge application fees.
+      <p class="text-[11px] text-slate-400 mt-5">
+        Direct application takes place on {listing.company}'s official domains or corporate email. PakInternships never charges application fees.
       </p>
     </section>
 

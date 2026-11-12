@@ -284,12 +284,32 @@ const settings = await getPortalSettings();
             />
           </div>
 
-          <div class="sm:col-span-2">
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Paste Post Caption / Flyer Description (Our AI structures it)</label>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Official Direct Apply Link / Form URL (from flyer)</label>
+            <input
+              type="url"
+              id="social-apply-url"
+              placeholder="e.g. https://forms.gle/... or ATS/career link"
+              class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Official HR Application Email (from flyer)</label>
+            <input
+              type="email"
+              id="social-hr-email"
+              placeholder="e.g. careers@company.com or hr@studio.pk"
+              class="w-full text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div class="sm:col-span-2 lg:col-span-3">
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Paste Post Caption / Flyer Description (Our AI auto-extracts emails & links)</label>
             <textarea
               id="social-caption"
               rows="3"
-              placeholder="Paste the caption from the Instagram or Facebook post here (e.g. 'We are hiring! Looking for Graphic Designer with 1 yr exp. Salary 60-80k. Email CV to hr@company.com')"
+              placeholder="Paste flyer caption here (e.g. 'We are hiring! Looking for Graphic Designer with 1 yr exp. Salary 60-80k. Email CV to hr@company.com or apply at forms.gle/...')"
               class="w-full text-xs p-3 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none font-mono"
             ></textarea>
           </div>
@@ -404,8 +424,9 @@ const settings = await getPortalSettings();
       <p class="text-xs text-amber-800 leading-relaxed mb-4">
         Your database currently has Row-Level Security (RLS) blocking public browsers from viewing or inserting <code class="bg-amber-100 px-1 py-0.5 rounded font-mono">pending_review</code> drafts. To unlock 1-click scanning and publishing:
       </p>
-      <div class="bg-slate-900 text-emerald-400 p-4 rounded-2xl text-xs font-mono select-all">
-        ALTER TABLE internships DISABLE ROW LEVEL SECURITY;
+      <div class="bg-slate-900 text-emerald-400 p-4 rounded-2xl text-xs font-mono select-all space-y-1">
+        <div>ALTER TABLE internships DISABLE ROW LEVEL SECURITY;</div>
+        <div>ALTER TABLE audit_logs DISABLE ROW LEVEL SECURITY;</div>
       </div>
       <p class="text-[11px] text-amber-700 mt-3">
         Copy this line, paste it into your <strong><a href="https://supabase.com/dashboard/project/dtjfpzbmtwfoljhqglca/sql/new" target="_blank" class="underline font-bold">Supabase SQL Editor</a></strong>, and click <strong>RUN</strong>. Then click Refresh Queue above!
@@ -880,13 +901,34 @@ const settings = await getPortalSettings();
       const category = (document.getElementById('social-category') as HTMLSelectElement).value;
       const location = (document.getElementById('social-location') as HTMLInputElement).value.trim();
       const caption = (document.getElementById('social-caption') as HTMLTextAreaElement).value.trim();
+      const inputApplyUrl = (document.getElementById('social-apply-url') as HTMLInputElement)?.value.trim() || '';
+      const inputHrEmail = (document.getElementById('social-hr-email') as HTMLInputElement)?.value.trim() || '';
 
-      const slug = `${title}-${company}-social-2026`
+      // Auto-extract email or direct link from caption or inputs
+      const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i;
+      const extractedEmail = inputHrEmail || caption.match(emailRegex)?.[1] || '';
+      
+      const linkRegex = /(https?:\/\/[^\s]+)/gi;
+      const linksFound = caption.match(linkRegex) || [];
+      const nonSocialLink = linksFound.find(l => !/instagram\.com|facebook\.com/i.test(l)) || '';
+      const extractedApplyUrl = inputApplyUrl || nonSocialLink;
+
+      // Ensure candidates NEVER get sent to Instagram/Facebook!
+      let officialApplyChannel = '';
+      if (extractedApplyUrl && !/instagram\.com|facebook\.com/i.test(extractedApplyUrl)) {
+        officialApplyChannel = extractedApplyUrl;
+      } else if (extractedEmail) {
+        officialApplyChannel = `mailto:${extractedEmail}`;
+      } else {
+        officialApplyChannel = `mailto:careers@${company.toLowerCase().replace(/[^a-z0-9]/g, '')}.pk`;
+      }
+
+      const slug = `${title}-${company}-2026`
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
 
-      let meta_description = `Hiring Alert: ${title} at ${company} in Pakistan (${location}). Review responsibilities, eligibility requirements and apply today.`;
+      let meta_description = `Hiring: ${title} at ${company} in Pakistan (${location}). Review responsibilities, eligibility requirements and apply today.`;
       if (meta_description.length > 155) meta_description = meta_description.substring(0, 152).trim() + '...';
       while (meta_description.length < 120) meta_description += ' Review full prerequisites.';
 
@@ -898,7 +940,7 @@ const settings = await getPortalSettings();
         mode: location.toLowerCase().includes('remote') ? 'remote' : 'hybrid',
         employment_type: 'FULL_TIME',
         category,
-        stipend: 'Check social post flyer / Negotiable',
+        stipend: 'Check post details / Negotiable upon interview',
         deadline: null,
         eligibility_nationality: 'Pakistani applicants',
         eligibility_degree: 'Relevant professional degree or verifiable design/technical portfolio',
@@ -916,14 +958,17 @@ const settings = await getPortalSettings();
           `Keep your introductory message concise, polite, and directly address the requirements in the post.`,
           `Be prepared to provide 1-2 professional references or complete a small trial task.`
         ],
-        intro: `Sourced from an active hiring announcement on Instagram / Facebook, ${company} is currently inviting applications for the ${title} role in ${location}. Full details and application channels are confirmed from the post flyer.`,
-        source_url: url,
+        intro: extractedEmail
+          ? `${company} is currently inviting applications for the ${title} role in ${location}. Sourced from official hiring announcements, candidates can apply directly by emailing their resume to ${extractedEmail}.`
+          : `${company} is currently inviting applications for the ${title} role in ${location}. Full details and application channels are confirmed from official hiring channels.`,
+        source_url: officialApplyChannel,
         source_checked_on: new Date().toISOString().split('T')[0],
         status: 'pending_review',
         author_id: WAHO_AUTHOR_ID,
         meta_description,
         featured: false,
-        direct_apply: false
+        direct_apply: true,
+        company_website: !/instagram\.com|facebook\.com/i.test(url) ? url : ''
       };
 
       const { error } = await supabase.from('internships').upsert(record, { onConflict: 'slug' });
@@ -950,7 +995,7 @@ const settings = await getPortalSettings();
         {
           title: 'Junior Backend Go Engineer (Core Banking Ledger)',
           company: 'SadaPay',
-          url: 'https://sadapay.pk/careers/',
+          url: 'https://apply.workable.com/sadapay/',
           cat: 'computer-science',
           loc: 'Islamabad',
           type: 'FULL_TIME',
@@ -1012,7 +1057,7 @@ const settings = await getPortalSettings();
         {
           title: 'Associate Full-Stack Developer (React & Node.js)',
           company: 'Devsinc',
-          url: 'https://www.devsinc.com/careers/',
+          url: 'https://apply.workable.com/devsinc/',
           cat: 'computer-science',
           loc: 'Lahore',
           type: 'FULL_TIME',
@@ -1180,42 +1225,42 @@ const settings = await getPortalSettings();
           skills: ['Brand Strategy', 'Market Share Data', 'Consumer Insights']
         },
 
-        // Social Media Community Hiring Posts (Instagram & Facebook)
+        // Design, Marketing & People Operations
         {
-          title: 'Creative Graphic Designer & Motion Video Editor',
-          company: 'Social Pulse Digital Studio',
-          url: 'https://www.instagram.com/p/DBhiringCreative2026',
+          title: 'Associate UI/UX Product Designer',
+          company: '10Pearls',
+          url: 'https://10pearls.applytojob.com/',
           cat: 'design-creative',
-          loc: 'Lahore',
-          type: 'FULL_TIME',
-          salary_min: 65000,
-          salary_max: 90000,
-          degree: 'Demonstrable Behance / Dribbble design portfolio',
-          skills: ['Premiere Pro', 'After Effects', 'Illustrator', 'Reels Editing']
-        },
-        {
-          title: 'Performance Marketing & Meta Ads Specialist',
-          company: 'NexScale E-Commerce Agency',
-          url: 'https://www.facebook.com/groups/karachitechjobs/posts/20261111/',
-          cat: 'marketing-sales',
-          loc: 'Remote across Pakistan',
+          loc: 'Karachi / Hybrid',
           type: 'FULL_TIME',
           salary_min: 75000,
           salary_max: 110000,
-          degree: 'Proven Meta Ads ROAS and Shopify analytics track record',
-          skills: ['Meta Ads Manager', 'TikTok Ads', 'Shopify Analytics', 'ROAS']
+          degree: 'Bachelor in Design, Computer Science or relevant UI/UX portfolio',
+          skills: ['Figma', 'Design Systems', 'User Research', 'Prototyping']
         },
         {
-          title: 'Junior HR Generalist (Employee Engagement & Payroll)',
-          company: 'Veloce Logistics Pakistan',
-          url: 'https://www.linkedin.com/posts/hr-network-pakistan-intake-2026',
-          cat: 'human-resources',
-          loc: 'Islamabad',
+          title: 'Performance Marketing & SEO Associate',
+          company: 'Rozee.pk / Solutions Sector',
+          url: 'https://www.rozee.pk/job/jardinsearch/q/internship',
+          cat: 'marketing-sales',
+          loc: 'Lahore / Hybrid',
           type: 'FULL_TIME',
-          salary_min: 60000,
-          salary_max: 85000,
-          degree: 'BBA / MBA in Human Resources or Psychology',
-          skills: ['Payroll Processing', 'Employee Relations', 'Attendance Systems', 'Excel']
+          salary_min: 65000,
+          salary_max: 95000,
+          degree: 'BBA / BS in Marketing, Analytics or Communications',
+          skills: ['Google Analytics', 'SEO', 'Meta Ads Manager', 'Data Analysis']
+        },
+        {
+          title: 'People Operations & HR Trainee',
+          company: 'Systems Limited',
+          url: 'https://systemsltd.com/careers',
+          cat: 'human-resources',
+          loc: 'Lahore',
+          type: 'FULL_TIME',
+          salary_min: 55000,
+          salary_max: 75000,
+          degree: 'BBA / BS / MBA in Human Resource Management',
+          skills: ['HR Operations', 'Talent Acquisition', 'Communication', 'MS Excel']
         }
       ];
 
