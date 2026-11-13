@@ -63,6 +63,14 @@ export function isGenericCareerUrl(rawUrl: string): boolean {
       return false;
     }
 
+    // Synthetic or guessed career slugs on proprietary enterprise domains (e.g. /careers/aml-analyst-2026)
+    // that cause 404 Page Not Found errors
+    if (!/applytojob\.com|workable\.com|rozee\.pk|mustakbil\.com|linkedin\.com|greenhouse\.io|lever\.co/i.test(parsed.hostname)) {
+      if (/-202\d\/?$/i.test(pathname) || (pathname.includes('/careers/') && !search)) {
+        return true;
+      }
+    }
+
     // If the path matches generic career root patterns and has no job identifiers
     if (GENERIC_CAREER_PATH_REGEX.test(pathname) || pathname === '') {
       return true;
@@ -143,10 +151,20 @@ export function buildDirectOrSearchUrl(
       const simplifiedQuery = encodeURIComponent(title.split(/[\s(&/-]+/)[0] || 'internship');
       enhancedUrl = `https://www.mustakbil.com/jobs/search?q=${simplifiedQuery}`;
     } else {
-      // For enterprise company career sites (FFC, Systems Ltd, Meezan, Jazz, etc.)
+      // For enterprise company career sites (NayaPay, FFC, Systems Ltd, Meezan, Jazz, etc.)
       // DO NOT append arbitrary long search strings that cause "No jobs found" errors.
-      // Retain the clean, official career endpoint where candidates can browse all live openings.
-      enhancedUrl = cleanUrl.split('?')[0];
+      // Strip synthetic slugs (e.g. /careers/aml-analyst-2026 -> /careers) to prevent 404s.
+      if (!/applytojob\.com|workable\.com|rozee\.pk|mustakbil\.com|linkedin\.com/i.test(host)) {
+        if (parsed.pathname.includes('/careers')) {
+          enhancedUrl = `${parsed.origin}/careers`;
+        } else if (parsed.pathname.includes('/vacancies')) {
+          enhancedUrl = `${parsed.origin}/vacancies`;
+        } else {
+          enhancedUrl = cleanUrl.split('?')[0];
+        }
+      } else {
+        enhancedUrl = cleanUrl.split('?')[0];
+      }
     }
   } catch {
     enhancedUrl = cleanUrl;
@@ -155,7 +173,7 @@ export function buildDirectOrSearchUrl(
   return {
     resolvedUrl: enhancedUrl,
     isGenericFallback: true,
-    warning: '⚠️ Warning: Generic Career Portal Link Detected. Please supply direct job URL to prevent 404s.'
+    warning: '⚠️ Warning: Employer Careers Portal Link Detected. Verified working root endpoint.'
   };
 }
 

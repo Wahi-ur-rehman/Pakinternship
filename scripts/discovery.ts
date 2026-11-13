@@ -36,7 +36,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   // ============================================================================
   {
     source_name: 'SadaPay FinTech Careers',
-    source_url: 'https://sadapay.pk/careers/backend-engineer-2026',
+    source_url: 'https://apply.workable.com/sadapay/',
     category: 'computer-science',
     location: 'Islamabad',
     mode: 'hybrid',
@@ -62,35 +62,36 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
     `
   },
   {
-    source_name: 'NayaPay Compliance Operations',
-    source_url: 'https://www.nayapay.com/careers/aml-analyst-2026',
-    category: 'banking-finance',
+    source_name: 'NayaPay SQA Automation Engineering',
+    source_url: 'https://www.nayapay.com/careers',
+    category: 'computer-science',
     location: 'Karachi',
     mode: 'onsite',
     employment_type: 'FULL_TIME',
-    raw_title: 'Anti-Money Laundering (AML) & Fraud Analyst',
+    raw_title: 'Associate SQA Automation Engineer',
     raw_company: 'NayaPay',
     salary_min: 75000,
-    salary_max: 100000,
+    salary_max: 105000,
     salary_currency: 'PKR',
     salary_period: 'MONTH',
-    experience_months: 12,
+    experience_months: 6,
     company_website: 'https://www.nayapay.com',
     company_logo: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=120&q=80',
     segment: 'startup',
     raw_text: `
-      NayaPay Digital Wallet: AML & Fraud Operations Analyst.
+      NayaPay Digital Wallet: Associate SQA Automation Engineer.
       Location: Karachi Head Office.
-      Eligibility: Pakistani nationals. BBA / BS in Finance, Accounting, or Criminology. Min 1 year digital wallet compliance or bank transaction monitoring experience.
-      Salary: PKR 75,000 - PKR 100,000 per month.
-      Deadline: 2026-12-12.
-      Responsibilities: Review high-risk wallet transactions, generate Suspicious Transaction Reports (STRs) for SBP, analyze fraud trend anomalies, and maintain KYC verification audit logs.
-      Skills: AML/KYC, Transaction Monitoring, State Bank Regulations, Excel, Fraud Analytics.
+      Eligibility: Pakistani nationals. Bachelor's or Master's degree in Computer Science, Information Technology, or an equivalent field. 0-1 year of relevant experience in QA Engineering, Software Testing, or SQA Automation. Basic knowledge of programming languages (preferably Java).
+      Salary: PKR 75,000 - PKR 105,000 per month.
+      Deadline: 2026-12-31.
+      Responsibilities: Develop, execute, and maintain automation scripts and test cases. Assist in designing and enhancing automation frameworks. Collaborate with development and QA teams to understand automation requirements. Identify, document, and track bugs. Troubleshoot automation issues and support continuous improvement initiatives. Maintain documentation of automation processes and test results.
+      Skills: SQA Automation, Java, Test Automation Frameworks, Test Cases, Bug Tracking, SDLC, Postman.
+      Apply: Email CV to careers@nayapay.com with job title in subject or apply via https://www.nayapay.com/careers
     `
   },
   {
     source_name: 'PostEx Logistics FinTech',
-    source_url: 'https://postex.pk/careers/operations-executive-2026',
+    source_url: 'https://postex.pk/careers/',
     category: 'supply-chain',
     location: 'Lahore',
     mode: 'onsite',
@@ -117,7 +118,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'Bykea Growth Team',
-    source_url: 'https://bykea.com/careers/operations-associate-2026',
+    source_url: 'https://bykea.com/careers/',
     category: 'marketing-sales',
     location: 'Karachi',
     mode: 'onsite',
@@ -144,7 +145,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'Krave Mart Quick-Commerce',
-    source_url: 'https://kravemart.com.pk/careers/inventory-analyst-2026',
+    source_url: 'https://kravemart.com.pk/careers/',
     category: 'supply-chain',
     location: 'Karachi',
     mode: 'onsite',
@@ -175,7 +176,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   // ============================================================================
   {
     source_name: 'Devsinc Software Engineering',
-    source_url: 'https://www.devsinc.com/careers/associate-full-stack-2026',
+    source_url: 'https://apply.workable.com/devsinc/',
     category: 'computer-science',
     location: 'Lahore',
     mode: 'onsite',
@@ -202,7 +203,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'Contour Software Constellation Division',
-    source_url: 'https://contour-software.com/careers/junior-developer-2026',
+    source_url: 'https://contour-software.com/careers/',
     category: 'computer-science',
     location: 'Karachi',
     mode: 'hybrid',
@@ -229,7 +230,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'VentureDive Mobile Engineering',
-    source_url: 'https://venturedive.com/careers/junior-flutter-developer-2026',
+    source_url: 'https://venturedive.com/careers/',
     category: 'computer-science',
     location: 'Islamabad',
     mode: 'hybrid',
@@ -256,7 +257,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'Folio3 AI & Cloud Solutions',
-    source_url: 'https://folio3.com/careers/associate-ai-engineer-2026',
+    source_url: 'https://folio3.com/careers/',
     category: 'computer-science',
     location: 'Karachi',
     mode: 'onsite',
@@ -283,7 +284,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'Tkxel Quality Assurance',
-    source_url: 'https://tkxel.com/careers/associate-sqa-engineer-2026',
+    source_url: 'https://tkxel.com/careers/',
     category: 'computer-science',
     location: 'Lahore',
     mode: 'hybrid',
@@ -310,7 +311,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'i2c Inc Core Payments Division',
-    source_url: 'https://www.i2cinc.com/careers/associate-software-engineer-2026',
+    source_url: 'https://www.i2cinc.com/careers/',
     category: 'computer-science',
     location: 'Lahore',
     mode: 'onsite',
@@ -341,7 +342,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   // ============================================================================
   {
     source_name: 'Meezan Bank Careers',
-    source_url: 'https://www.meezanbank.com/careers/branch-banking-officer-2026',
+    source_url: 'https://www.meezanbank.com/careers/',
     category: 'banking-finance',
     location: 'Karachi & Nationwide',
     mode: 'onsite',
@@ -370,7 +371,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'Meezan Bank Trainee Program',
-    source_url: 'https://www.meezanbank.com/careers/trainee-islamic-banking-2026',
+    source_url: 'https://www.meezanbank.com/careers/',
     category: 'banking-finance',
     location: 'Lahore / Karachi',
     mode: 'onsite',
@@ -394,7 +395,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'United Bank Limited (UBL) Retail Banking',
-    source_url: 'https://www.ubldigital.com/careers/graduate-officer-2026',
+    source_url: 'https://www.ubldigital.com/careers/',
     category: 'banking-finance',
     location: 'Islamabad / Rawalpindi',
     mode: 'onsite',
@@ -425,7 +426,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   // ============================================================================
   {
     source_name: 'Fauji Fertilizer Company (FFC) Engineering',
-    source_url: 'https://www.ffc.com.pk/careers/plant-mechanical-engineer-2026',
+    source_url: 'https://www.ffc.com.pk/careers/',
     category: 'engineering',
     location: 'Rahim Yar Khan',
     mode: 'onsite',
@@ -454,7 +455,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'Descon Engineering Infrastructure',
-    source_url: 'https://www.descon.com/careers/site-engineer-2026',
+    source_url: 'https://www.descon.com/careers/',
     category: 'engineering',
     location: 'Lahore / Project Sites',
     mode: 'onsite',
@@ -481,7 +482,7 @@ export const PAKISTAN_ALL_ECOSYSTEM_TARGETS: DiscoveryJobTarget[] = [
   },
   {
     source_name: 'Unilever Pakistan Consumer Marketing',
-    source_url: 'https://careers.unilever.com/trainee-brand-growth-2026',
+    source_url: 'https://careers.unilever.com/',
     category: 'marketing-sales',
     location: 'Karachi',
     mode: 'hybrid',

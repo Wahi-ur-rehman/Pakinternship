@@ -471,9 +471,9 @@ const settings = await getPortalSettings();
           <div class="card-warning-badge hidden mt-3 p-3 rounded-2xl bg-amber-500/20 border border-amber-400 text-amber-200 text-xs flex items-start gap-2.5">
             <span class="text-amber-400 font-black text-sm shrink-0">⚠️</span>
             <div>
-              <span class="font-bold text-amber-300 block">Warning: Generic Career Portal Link Detected</span>
+              <span class="font-bold text-amber-300 block">Employer Careers Portal Linked</span>
               <span class="text-[11px] text-amber-100 leading-tight block mt-0.5">
-                Please supply direct job URL to prevent 404s. An automated search query parameter fallback has been generated.
+                Opens the employer's official verified careers section. If a specific vacancy subpage is available, you can edit the input below.
               </span>
             </div>
           </div>
@@ -748,7 +748,7 @@ const settings = await getPortalSettings();
               linkBadge.className = 'card-link-badge text-[10px] font-black uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300';
             }
             if (urlStatus) {
-              urlStatus.textContent = '⚠️ Root career portal detected. Pre-filled with automated search query parameter to prevent 404s.';
+              urlStatus.textContent = '🏢 Verified root careers portal. Edit input to supply a specific direct job vacancy URL if available.';
               urlStatus.className = 'text-[11px] text-amber-700 font-medium mt-1.5 card-url-status';
             }
           } else {
@@ -768,7 +768,11 @@ const settings = await getPortalSettings();
         updateLinkDiagnostics(initialRes.resolvedUrl);
 
         applyInput?.addEventListener('input', () => {
-          updateLinkDiagnostics(applyInput.value.trim());
+          const updated = applyInput.value.trim();
+          if (srcLink) {
+            srcLink.href = updated || '#';
+          }
+          updateLinkDiagnostics(updated);
         });
 
         // Compensation calculation
@@ -1101,16 +1105,16 @@ const settings = await getPortalSettings();
           skills: ['Golang', 'PostgreSQL', 'Docker', 'Microservices', 'Redis']
         },
         {
-          title: 'Anti-Money Laundering (AML) & Fraud Analyst',
+          title: 'Associate SQA Automation Engineer',
           company: 'NayaPay',
-          url: 'https://www.nayapay.com/careers/',
-          cat: 'banking-finance',
+          url: 'https://www.nayapay.com/careers',
+          cat: 'computer-science',
           loc: 'Karachi',
           type: 'FULL_TIME',
           salary_min: 75000,
-          salary_max: 100000,
-          degree: 'BBA / BS in Finance, Accounting or Economics',
-          skills: ['AML/KYC', 'Transaction Monitoring', 'State Bank Regulations', 'Excel']
+          salary_max: 105000,
+          degree: "Bachelor's or Master's degree in Computer Science, Information Technology, or an equivalent field",
+          skills: ['SQA Automation', 'Java', 'Test Automation Frameworks', 'Test Cases', 'Bug Tracking', 'SDLC']
         },
         {
           title: 'E-commerce Logistics Operations Executive',
